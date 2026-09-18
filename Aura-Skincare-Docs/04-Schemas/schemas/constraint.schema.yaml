@@ -1,0 +1,159 @@
+﻿metadata:
+
+  id: CONSTRAINT-SCHEMA
+
+  title: Constraint Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for documenting
+    business, technical, security, legal, and operational
+    constraints within the Aura platform.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - constraint.id
+
+  - constraint.title
+
+  - constraint.type
+
+  - constraint.priority
+
+  - constraint.status
+
+  - constraint.description
+
+optional:
+
+  - constraint.reason
+
+  - constraint.impact
+
+  - constraint.mitigation
+
+  - constraint.related_requirements
+
+  - constraint.related_features
+
+  - constraint.notes
+
+types:
+
+  constraint.id: string
+
+  constraint.title: string
+
+  constraint.type: string
+
+  constraint.priority: string
+
+  constraint.status: string
+
+  constraint.description: string
+
+  constraint.reason: string
+
+  constraint.impact: string
+
+  constraint.mitigation: string
+
+  constraint.related_requirements: array
+
+  constraint.related_features: array
+
+  constraint.notes: string
+
+validation:
+
+  constraint.id:
+
+    pattern: "^NFR-[0-9]{3}$"
+
+  constraint.type:
+
+    allowed:
+
+      - Business
+
+      - Technical
+
+      - Security
+
+      - Performance
+
+      - Legal
+
+      - Operational
+
+  constraint.priority:
+
+    allowed:
+
+      - Critical
+
+      - High
+
+      - Medium
+
+      - Low
+
+  constraint.status:
+
+    allowed:
+
+      - Draft
+
+      - Approved
+
+      - Deprecated
+
+relationships:
+
+  requirements:
+
+    many: true
+
+  features:
+
+    many: true
+
+  architecture:
+
+    many: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable: true
+
+  machine_validated: true
+
+core_principle: >
+
+  Every constraint must be documented,
+  justified, and traceable throughout the project.

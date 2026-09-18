@@ -1,0 +1,51 @@
+metadata:
+
+  id: EVAL-005
+
+  title: Cart Management Validation
+
+  version: 1.0
+
+  status: Approved
+
+feature:
+
+  FEAT-005
+
+api:
+
+  API-006
+
+purpose:
+
+  Validate shopping cart operations.
+
+preconditions:
+
+  - Customer authenticated.
+
+test_cases:
+
+  - id: TC-001
+    name: Add Product
+    expected: Product added to cart.
+
+  - id: TC-002
+    name: Update Quantity
+    expected: Quantity updated.
+
+  - id: TC-003
+    name: Remove Product
+    expected: Product removed.
+
+  - id: TC-004
+    name: Empty Cart
+    expected: Cart cleared successfully.
+
+success_criteria:
+
+  operation_accuracy: "100%"
+
+result:
+
+  status: Pending

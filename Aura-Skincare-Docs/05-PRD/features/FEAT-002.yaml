@@ -1,0 +1,151 @@
+﻿metadata:
+
+  id: FEAT-002
+
+  title: Intelligent Product Recommendation Engine
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Feature
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+feature:
+
+  id: FEAT-002
+
+  type: Core Feature
+
+  priority: Critical
+
+  description: >
+
+    Provides intelligent, explainable, and personalized
+    product recommendations based on customer profile,
+    skincare concerns, business rules, and available inventory.
+
+business_value:
+
+  - Increase conversion rate
+
+  - Improve customer trust
+
+  - Increase average order value
+
+  - Reduce incorrect product purchases
+
+supports_requirement:
+
+  - REQ-001
+
+actors:
+
+  primary:
+
+    - Customer
+
+  secondary:
+
+    - Customer AI Agent
+
+trigger:
+
+  AI consultation is completed or customer requests recommendations.
+
+inputs:
+
+  - Customer profile
+
+  - Skin type
+
+  - Skin concerns
+
+  - Customer preferences
+
+  - Product catalog
+
+  - Business rules
+
+  - Inventory availability
+
+outputs:
+
+  - Recommended products
+
+  - Recommended skincare routine
+
+  - Recommendation explanations
+
+  - Alternative products
+
+main_flow:
+
+  - Load customer information.
+
+  - Analyze skincare needs.
+
+  - Filter unavailable products.
+
+  - Apply business rules.
+
+  - Rank suitable products.
+
+  - Generate personalized recommendations.
+
+  - Explain each recommendation.
+
+success_criteria:
+
+  - Only available products are recommended.
+
+  - Recommendations are personalized.
+
+  - Every recommendation includes an explanation.
+
+  - Alternative products are suggested when appropriate.
+
+dependencies:
+
+  - Customer AI Agent
+
+  - Product Database
+
+  - Inventory Service
+
+  - Business Rules
+
+related_apis:
+
+  - API-001
+
+  - API-004
+
+related_data_models:
+
+  - DM-001
+
+  - DM-002
+
+future_extensions:
+
+  - AI ranking optimization
+
+  - Customer purchase history
+
+  - Seasonal recommendations
+
+  - Cross-sell recommendations
+
+  - Upsell recommendations
+
+core_principle: >
+
+  Every recommendation must be relevant,
+  explainable, available, and aligned with
+  customer needs rather than simply promoting products.

@@ -1,0 +1,50 @@
+﻿metadata:
+
+  id: DM-XXX
+
+  title:
+
+  version: 1.0
+
+  status: Draft
+
+  owner:
+
+entity:
+
+  name:
+
+  description:
+
+purpose:
+
+attributes:
+
+  - name:
+    type:
+    required:
+    description:
+
+primary_key:
+
+foreign_keys:
+
+relationships:
+
+constraints:
+
+indexes:
+
+validation_rules:
+
+sample_data:
+
+security:
+
+retention_policy:
+
+related_api:
+
+related_documents:
+
+notes:

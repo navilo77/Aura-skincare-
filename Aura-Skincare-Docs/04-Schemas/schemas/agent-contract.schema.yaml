@@ -1,0 +1,178 @@
+﻿metadata:
+
+  id: AGENT-CONTRACT-SCHEMA
+
+  title: Agent Contract Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for all AI agent
+    contracts used within the Aura platform.
+    This schema ensures every AI agent has a
+    clearly defined identity, responsibilities,
+    permissions, capabilities, limitations,
+    inputs, outputs, and governance rules.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - agent.id
+
+  - agent.name
+
+  - agent.type
+
+  - agent.description
+
+  - role.primary
+
+  - permissions.allowed
+
+  - permissions.denied
+
+  - inputs
+
+  - outputs
+
+  - capabilities
+
+  - limitations
+
+optional:
+
+  - knowledge
+
+  - approval
+
+  - escalation
+
+  - confidence
+
+  - quality
+
+  - success_metrics
+
+  - core_principle
+
+types:
+
+  agent.id: string
+
+  agent.name: string
+
+  agent.type: string
+
+  agent.description: string
+
+  role.primary: array
+
+  permissions.allowed: array
+
+  permissions.denied: array
+
+  inputs: array
+
+  outputs: array
+
+  capabilities: array
+
+  limitations: array
+
+  knowledge: object
+
+  approval: object
+
+  escalation: object
+
+  confidence: object
+
+  quality: object
+
+  success_metrics: array
+
+  core_principle: string
+
+validation:
+
+  agent.id:
+
+    pattern: "^[a-z0-9-]+$"
+
+  agent.type:
+
+    allowed:
+
+      - Runtime Agent
+
+      - Development Agent
+
+      - Utility Agent
+
+      - System Agent
+
+relationships:
+
+  requirements:
+
+    many: true
+
+  features:
+
+    many: true
+
+  apis:
+
+    many: true
+
+  data_models:
+
+    many: true
+
+  architecture:
+
+    one: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable: true
+
+  machine_validated: true
+
+governance:
+
+  approval_required: true
+
+  version_controlled: true
+
+  ssot_compliant: true
+
+core_principle: >
+
+  Every AI agent must have a clear contract that
+  defines what it can do, what it cannot do,
+  what information it may access,
+  and how it interacts with the Aura ecosystem.

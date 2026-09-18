@@ -1,0 +1,400 @@
+metadata:
+  id: API-004
+  title: Order Management API
+  version: 1.0
+  status: Approved
+  updated: 2026-09-17
+
+base_path: /api/v1/orders
+
+authentication:
+  required: true
+
+entities:
+  - Order
+  - OrderItem
+  - ShippingAddress
+  - BillingAddress
+
+enums:
+  order_status:
+    - pending
+    - processing
+    - shipped
+    - delivered
+    - cancelled
+
+operations:
+  - Create Order
+  - Get Order
+  - List Orders
+  - Update Order
+  - Delete Order
+  - Create Order Item
+  - Get Order Item
+  - List Order Items
+  - Update Order Item
+  - Delete Order Item
+  - Create Shipping Address
+  - Get Shipping Address
+  - Update Shipping Address
+  - Delete Shipping Address
+  - Create Billing Address
+  - Get Billing Address
+  - Update Billing Address
+  - Delete Billing Address
+
+endpoints:
+
+  create_order:
+    method: POST
+    path: ""
+    request:
+      customer_id: uuid
+      items:
+        - product_id: uuid
+          quantity: integer
+          unit_price: decimal (optional)
+          variant_name: string (optional)
+      shipping_address:
+        full_name: string
+        phone: string
+        address_line1: string
+        address_line2: string (optional)
+        city: string
+        state: string
+        postal_code: string
+        country: string (ISO 3166-1 alpha-2)
+      billing_address:
+        full_name: string
+        phone: string
+        address_line1: string
+        address_line2: string (optional)
+        city: string
+        state: string
+        postal_code: string
+        country: string (ISO 3166-1 alpha-2)
+      currency: string (ISO 4217, default: USD)
+      status: string (default: pending)
+    response:
+      order_id: uuid
+      order_number: string
+      customer_id: uuid
+      status: string
+      total_amount: decimal
+      currency: string
+      items: array
+      shipping_address: object (optional)
+      billing_address: object (optional)
+      created_at: datetime
+      updated_at: datetime
+
+  get_order:
+    method: GET
+    path: /{order_id}
+    response:
+      order_id: uuid
+      order_number: string
+      customer_id: uuid
+      status: string
+      total_amount: decimal
+      currency: string
+      items: array
+      shipping_address: object (optional)
+      billing_address: object (optional)
+      created_at: datetime
+      updated_at: datetime
+
+  list_orders:
+    method: GET
+    path: ""
+    query:
+      skip: integer (default: 0)
+      limit: integer (default: 20)
+      customer_id: uuid (optional)
+      status: string (optional)
+      search: string (optional)
+    response:
+      - order_id: uuid
+        order_number: string
+        customer_id: uuid
+        status: string
+        total_amount: decimal
+        currency: string
+        created_at: datetime
+        updated_at: datetime
+
+  update_order:
+    method: PATCH
+    path: /{order_id}
+    request:
+      status: string
+    response:
+      order_id: uuid
+      order_number: string
+      customer_id: uuid
+      status: string
+      total_amount: decimal
+      currency: string
+      items: array
+      shipping_address: object (optional)
+      billing_address: object (optional)
+      created_at: datetime
+      updated_at: datetime
+
+  delete_order:
+    method: DELETE
+    path: /{order_id}
+    response:
+      status_code: 204
+
+  create_order_item:
+    method: POST
+    path: /{order_id}/items
+    request:
+      product_id: uuid
+      quantity: integer
+      unit_price: decimal (optional)
+      variant_name: string (optional)
+    response:
+      order_item_id: uuid
+      order_id: uuid
+      product_id: uuid
+      quantity: integer
+      unit_price: decimal
+      total_price: decimal
+      product_name: string
+      sku: string
+      variant_name: string (optional)
+      created_at: datetime
+      updated_at: datetime
+
+  get_order_item:
+    method: GET
+    path: /{order_id}/items/{item_id}
+    response:
+      order_item_id: uuid
+      order_id: uuid
+      product_id: uuid
+      quantity: integer
+      unit_price: decimal
+      total_price: decimal
+      product_name: string
+      sku: string
+      variant_name: string (optional)
+      created_at: datetime
+      updated_at: datetime
+
+  list_order_items:
+    method: GET
+    path: /{order_id}/items
+    query:
+      skip: integer (default: 0)
+      limit: integer (default: 20)
+    response:
+      - order_item_id: uuid
+        order_id: uuid
+        product_id: uuid
+        quantity: integer
+        unit_price: decimal
+        total_price: decimal
+        product_name: string
+        sku: string
+        variant_name: string (optional)
+        created_at: datetime
+        updated_at: datetime
+
+  update_order_item:
+    method: PATCH
+    path: /{order_id}/items/{item_id}
+    request:
+      quantity: integer (optional)
+      unit_price: decimal (optional)
+    response:
+      order_item_id: uuid
+      order_id: uuid
+      product_id: uuid
+      quantity: integer
+      unit_price: decimal
+      total_price: decimal
+      product_name: string
+      sku: string
+      variant_name: string (optional)
+      created_at: datetime
+      updated_at: datetime
+
+  delete_order_item:
+    method: DELETE
+    path: /{order_id}/items/{item_id}
+    response:
+      status_code: 204
+
+  create_shipping_address:
+    method: POST
+    path: /{order_id}/shipping-address
+    request:
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string (ISO 3166-1 alpha-2)
+    response:
+      address_id: uuid
+      order_id: uuid
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string
+      created_at: datetime
+      updated_at: datetime
+
+  get_shipping_address:
+    method: GET
+    path: /{order_id}/shipping-address
+    response:
+      address_id: uuid
+      order_id: uuid
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string
+      created_at: datetime
+      updated_at: datetime
+
+  update_shipping_address:
+    method: PATCH
+    path: /{order_id}/shipping-address
+    request:
+      full_name: string (optional)
+      phone: string (optional)
+      address_line1: string (optional)
+      address_line2: string (optional)
+      city: string (optional)
+      state: string (optional)
+      postal_code: string (optional)
+      country: string (optional)
+    response:
+      address_id: uuid
+      order_id: uuid
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string
+      created_at: datetime
+      updated_at: datetime
+
+  delete_shipping_address:
+    method: DELETE
+    path: /{order_id}/shipping-address
+    response:
+      status_code: 204
+
+  create_billing_address:
+    method: POST
+    path: /{order_id}/billing-address
+    request:
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string (ISO 3166-1 alpha-2)
+    response:
+      address_id: uuid
+      order_id: uuid
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string
+      created_at: datetime
+      updated_at: datetime
+
+  get_billing_address:
+    method: GET
+    path: /{order_id}/billing-address
+    response:
+      address_id: uuid
+      order_id: uuid
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string
+      created_at: datetime
+      updated_at: datetime
+
+  update_billing_address:
+    method: PATCH
+    path: /{order_id}/billing-address
+    request:
+      full_name: string (optional)
+      phone: string (optional)
+      address_line1: string (optional)
+      address_line2: string (optional)
+      city: string (optional)
+      state: string (optional)
+      postal_code: string (optional)
+      country: string (optional)
+    response:
+      address_id: uuid
+      order_id: uuid
+      full_name: string
+      phone: string
+      address_line1: string
+      address_line2: string (optional)
+      city: string
+      state: string
+      postal_code: string
+      country: string
+      created_at: datetime
+      updated_at: datetime
+
+  delete_billing_address:
+    method: DELETE
+    path: /{order_id}/billing-address
+    response:
+      status_code: 204
+
+business_rules:
+  - Order must have at least one item
+  - Order number is auto-generated (format: ORD-{timestamp}-{random})
+  - Order status transitions are enforced
+  - Completed orders (delivered/cancelled) cannot be modified
+  - Completed orders (delivered/cancelled) cannot be deleted
+  - Product must exist and be active to be added to order
+  - Stock quantity must be sufficient for order items
+  - Order total is recalculated when items change
+  - Shipping and billing addresses are optional but at most one per order
+  - Currency must be a 3-character ISO code
+
+errors:
+  - 400: Validation Error
+  - 401: Unauthorized
+  - 403: Forbidden
+  - 404: Order/Item/Address not found
+  - 409: Invalid status transition or business rule violation
+  - 422: Unprocessable Entity

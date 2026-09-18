@@ -1,0 +1,506 @@
+﻿metadata:
+
+  id: DB-001
+
+  title: Master Database Model
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Database
+
+  created: 2026-09-15
+
+  updated: 2026-09-17
+
+database:
+
+  engine: Supabase (Managed PostgreSQL)
+
+  version: "16"
+
+  orm: SQLAlchemy
+
+  migration: Alembic
+
+  charset: UTF-8
+
+  timezone: UTC
+
+  naming_convention: snake_case
+
+architecture:
+
+  pattern: Modular Monolith
+
+  database_per_service: false
+
+  single_source_of_truth: true
+
+  soft_delete: true
+
+  audit_logging: true
+
+modules:
+
+  customer:
+
+    entities:
+
+      - Customer
+      - Address
+      - Conversation
+
+  product:
+
+    entities:
+
+      - Category
+      - Product
+      - Inventory
+  order:
+
+    entities:
+
+      - Order
+
+      - OrderItem
+
+      - ShippingAddress
+
+      - BillingAddress
+
+      - Payment
+  ai:
+
+    entities:
+
+      - Recommendation
+      - PromptLog
+
+  analytics:
+
+    entities:
+
+      - EventLog
+      - AuditLog
+
+entities:
+
+  Customer:
+
+    table: customers
+
+    primary_key: customer_id
+
+    columns:
+
+      - customer_id (UUID, PK)
+
+      - full_name (String(255))
+
+      - email (String(255), unique, indexed)
+
+      - phone (String(20), unique, indexed, nullable)
+
+      - status (Enum: active, inactive, suspended)
+
+      - skin_type (String(50), nullable)
+
+      - skin_concerns (JSON, nullable)
+
+      - created_at (DateTime)
+
+      - updated_at (DateTime)
+
+      - deleted_at (DateTime, soft delete)
+
+    relationships:
+
+      has_many:
+
+        - Address
+
+        - Order
+
+        - Conversation
+
+  Address:
+
+    table: customer_addresses
+
+    primary_key: address_id
+
+    relationships:
+
+      belongs_to:
+
+        - Customer
+
+  Category:
+
+    table: product_categories
+
+    primary_key: category_id
+
+    relationships:
+
+      has_many:
+
+        - Product
+
+  Product:
+
+    table: products
+
+    primary_key: product_id
+
+    relationships:
+
+      belongs_to:
+
+        - Category
+
+      has_one:
+
+        - Inventory
+
+      referenced_by:
+
+        - OrderItem
+
+        - Recommendation
+
+  Inventory:
+
+    table: inventories
+
+    primary_key: inventory_id
+
+    relationships:
+
+      belongs_to:
+
+        - Product
+
+  Order:
+
+    table: orders
+
+    primary_key: order_id
+
+    columns:
+
+      - order_id (UUID, PK)
+
+      - customer_id (UUID, FK)
+
+      - order_number (String(50), unique, indexed)
+
+      - status (Enum: pending, processing, shipped, delivered, cancelled)
+
+      - total_amount (Numeric(12,2))
+
+      - currency (String(3))
+
+      - created_at (DateTime)
+
+      - updated_at (DateTime)
+
+      - deleted_at (DateTime, soft delete)
+
+    relationships:
+
+      belongs_to:
+
+        - Customer
+
+      has_many:
+
+        - OrderItem
+
+      has_one:
+
+        - ShippingAddress
+
+        - BillingAddress
+
+      referenced_by:
+
+        - Payment
+
+  OrderItem:
+
+    table: order_items
+
+    primary_key: order_item_id
+
+    columns:
+
+      - order_item_id (UUID, PK)
+
+      - order_id (UUID, FK)
+
+      - product_id (UUID, FK)
+
+      - quantity (Integer)
+
+      - unit_price (Numeric(12,2))
+
+      - total_price (Numeric(12,2))
+
+      - product_name (String(255))
+
+      - sku (String(100))
+
+      - variant_name (String(255), nullable)
+
+      - created_at (DateTime)
+
+      - updated_at (DateTime)
+
+      - deleted_at (DateTime)
+
+    relationships:
+
+      belongs_to:
+
+        - Order
+
+        - Product
+
+  ShippingAddress:
+
+    table: shipping_addresses
+
+    primary_key: address_id
+
+    columns:
+
+      - address_id (UUID, PK)
+
+      - order_id (UUID, FK, unique)
+
+      - full_name (String(255))
+
+      - phone (String(20))
+
+      - address_line1 (String(255))
+
+      - address_line2 (String(255), nullable)
+
+      - city (String(100))
+
+      - state (String(100))
+
+      - postal_code (String(20))
+
+      - country (String(2))
+
+      - created_at (DateTime)
+
+      - updated_at (DateTime)
+
+      - deleted_at (DateTime)
+
+    relationships:
+
+      belongs_to:
+
+        - Order
+
+  BillingAddress:
+
+    table: billing_addresses
+
+    primary_key: address_id
+
+    columns:
+
+      - address_id (UUID, PK)
+
+      - order_id (UUID, FK, unique)
+
+      - full_name (String(255))
+
+      - phone (String(20))
+
+      - address_line1 (String(255))
+
+      - address_line2 (String(255), nullable)
+
+      - city (String(100))
+
+      - state (String(100))
+
+      - postal_code (String(20))
+
+      - country (String(2))
+
+      - created_at (DateTime)
+
+      - updated_at (DateTime)
+
+      - deleted_at (DateTime)
+
+    relationships:
+
+      belongs_to:
+
+        - Order
+
+  Payment:
+
+    table: payments
+
+    primary_key: payment_id
+
+    columns:
+
+      - payment_id (UUID, PK)
+
+      - order_id (UUID, FK)
+
+      - amount (Numeric(12,2))
+
+      - currency (String(3))
+
+      - status (Enum: pending, completed, failed, refunded)
+
+      - provider (String(50))
+
+      - provider_reference (String(255))
+
+      - created_at (DateTime)
+
+      - updated_at (DateTime)
+
+      - deleted_at (DateTime)
+
+    relationships:
+
+      belongs_to:
+
+        - Order
+
+  Conversation:
+
+    table: conversations
+
+    primary_key: conversation_id
+
+    relationships:
+
+      belongs_to:
+
+        - Customer
+
+      has_many:
+
+        - Recommendation
+
+  Recommendation:
+
+    table: recommendations
+
+    primary_key: recommendation_id
+
+    relationships:
+
+      belongs_to:
+
+        - Conversation
+
+        - Product
+
+  EventLog:
+
+    table: event_logs
+
+    primary_key: event_id
+
+  AuditLog:
+
+    table: audit_logs
+
+    primary_key: audit_id
+
+shared_columns:
+
+  - created_at
+
+  - updated_at
+
+  - deleted_at
+
+  - created_by
+
+  - updated_by
+
+  - deleted_by
+
+constraints:
+
+  foreign_keys: required
+
+  primary_keys: uuid
+
+  nullable_fields: minimized
+
+  timestamps_required: true
+
+  audit_required: true
+
+indexes:
+
+  primary_keys: true
+
+  foreign_keys: true
+
+  search_indexes: true
+
+  composite_indexes:
+
+    - customer_id_created_at
+
+    - order_id_product_id
+
+future_entities:
+
+  - Wishlist
+
+  - Review
+
+  - Coupon
+
+  - LoyaltyPoint
+
+  - Subscription
+
+  - Shipment
+
+  - ReturnRequest
+
+  - Refund
+
+integration_entities:
+
+  - WebhookEvent
+
+  - NotificationQueue
+
+  - EmailQueue
+
+  - WhatsAppMessage
+
+  - MessengerMessage
+
+core_principle: >
+
+  The database is the single authoritative source
+  of business data. Every entity must have clear
+  ownership, relationships, auditability, and
+  traceability across the Aura platform.

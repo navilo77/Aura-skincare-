@@ -1,0 +1,41 @@
+﻿metadata:
+
+  id: BR-XXX
+
+  title:
+
+  version: 1.0
+
+  status: Draft
+
+  owner:
+
+business_rule:
+
+  description:
+
+purpose:
+
+scope:
+
+trigger:
+
+conditions:
+
+actions:
+
+exceptions:
+
+validation_rules:
+
+priority:
+
+dependencies:
+
+related_requirements:
+
+related_features:
+
+related_documents:
+
+notes:

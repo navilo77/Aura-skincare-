@@ -1,0 +1,155 @@
+﻿metadata:
+
+  id: SOLUTION-SCHEMA
+
+  title: Solution Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for documenting
+    technical solutions that satisfy one or more
+    business requirements within the Aura platform.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - solution.id
+
+  - solution.title
+
+  - solution.status
+
+  - solution.description
+
+  - solution.requirements
+
+optional:
+
+  - solution.features
+
+  - solution.architecture
+
+  - solution.apis
+
+  - solution.data_models
+
+  - solution.agents
+
+  - solution.integrations
+
+  - solution.assumptions
+
+  - solution.risks
+
+  - solution.notes
+
+types:
+
+  solution.id: string
+
+  solution.title: string
+
+  solution.status: string
+
+  solution.description: string
+
+  solution.requirements: array
+
+  solution.features: array
+
+  solution.architecture: string
+
+  solution.apis: array
+
+  solution.data_models: array
+
+  solution.agents: array
+
+  solution.integrations: array
+
+  solution.assumptions: array
+
+  solution.risks: array
+
+  solution.notes: string
+
+validation:
+
+  solution.id:
+
+    pattern: "^SOL-[0-9]{3}$"
+
+  solution.status:
+
+    allowed:
+
+      - Draft
+
+      - Review
+
+      - Approved
+
+      - Deprecated
+
+relationships:
+
+  requirements:
+
+    many: true
+
+  features:
+
+    many: true
+
+  architecture:
+
+    one: true
+
+  apis:
+
+    many: true
+
+  data_models:
+
+    many: true
+
+  agents:
+
+    many: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable: true
+
+  machine_validated: true
+
+core_principle: >
+
+  Every solution must provide a complete,
+  traceable implementation approach that links
+  business requirements to architecture,
+  APIs, data models, and AI agents.

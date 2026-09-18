@@ -1,0 +1,49 @@
+﻿metadata:
+
+  id: FEAT-XXX
+
+  title:
+
+  version: 1.0
+
+  status: Draft
+
+  priority:
+
+  owner:
+
+feature:
+
+  description:
+
+business_value:
+
+problem_statement:
+
+objectives:
+
+scope:
+
+actors:
+
+preconditions:
+
+functional_requirements:
+
+non_functional_requirements:
+
+acceptance_criteria:
+
+dependencies:
+
+risks:
+
+success_metrics:
+
+related_requirements:
+
+related_api:
+
+related_documents:
+
+notes:

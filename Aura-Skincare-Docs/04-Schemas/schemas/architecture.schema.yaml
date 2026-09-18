@@ -1,0 +1,118 @@
+﻿metadata:
+
+  id: ARCHITECTURE-SCHEMA
+
+  title: Architecture Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for documenting
+    software architecture, system components,
+    layers, technologies, and design decisions.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - architecture.id
+
+  - architecture.name
+
+  - architecture.version
+
+  - architecture.status
+
+  - architecture.description
+
+optional:
+
+  - architecture.layers
+
+  - architecture.components
+
+  - architecture.technologies
+
+  - architecture.patterns
+
+  - architecture.dependencies
+
+  - architecture.integrations
+
+  - architecture.notes
+
+types:
+
+  architecture.id: string
+
+  architecture.name: string
+
+  architecture.version: string
+
+  architecture.status: string
+
+  architecture.description: string
+
+  architecture.layers: array
+
+  architecture.components: array
+
+  architecture.technologies: array
+
+  architecture.patterns: array
+
+  architecture.dependencies: array
+
+  architecture.integrations: array
+
+  architecture.notes: string
+
+validation:
+
+  architecture.id:
+
+    pattern: "^ARCH-[0-9]{3}$"
+
+  architecture.status:
+
+    allowed:
+
+      - Draft
+
+      - Approved
+
+      - Deprecated
+
+relationships:
+
+  project:
+
+    one: true
+
+  requirements:
+
+    many: true
+
+  features:
+
+    many: true
+
+  data_models:
+
+    many: true
+
+ 

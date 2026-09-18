@@ -1,0 +1,51 @@
+﻿metadata:
+
+  id: AGENT-XXX
+
+  title: Agent Contract
+
+  version: 1.0
+
+  status: Draft
+
+  owner:
+
+agent:
+
+  name:
+
+  description:
+
+  purpose:
+
+role:
+
+responsibilities:
+
+capabilities:
+
+limitations:
+
+inputs:
+
+outputs:
+
+dependencies:
+
+security:
+
+permissions:
+
+memory:
+
+tools:
+
+success_metrics:
+
+failure_conditions:
+
+monitoring:
+
+related_documents:
+
+notes:

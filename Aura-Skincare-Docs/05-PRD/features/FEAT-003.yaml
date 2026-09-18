@@ -1,0 +1,141 @@
+metadata:
+
+  id: FEAT-003
+
+  title: Shopping Cart Management
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Feature
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+feature:
+
+  id: FEAT-003
+
+  type: Core Feature
+
+  priority: Critical
+
+  description: >
+
+    Enables customers to manage their shopping cart
+    before checkout, ensuring accurate pricing,
+    inventory validation, and a seamless purchasing experience.
+
+business_value:
+
+  - Reduce cart abandonment
+
+  - Simplify purchasing
+
+  - Improve checkout readiness
+
+  - Increase completed orders
+
+supports_requirement:
+
+  - REQ-002
+
+actors:
+
+  primary:
+
+    - Customer
+
+  secondary:
+
+    - Product Service
+
+    - Inventory Service
+
+trigger:
+
+  Customer adds a product to the shopping cart.
+
+inputs:
+
+  - Product ID
+
+  - Quantity
+
+  - Customer ID
+
+outputs:
+
+  - Updated cart
+
+  - Cart total
+
+  - Stock validation result
+
+  - Checkout readiness
+
+main_flow:
+
+  - Customer adds product to cart.
+
+  - System validates product availability.
+
+  - Cart is updated.
+
+  - Quantity can be modified.
+
+  - Product can be removed.
+
+  - Total price is recalculated.
+
+  - Stock is revalidated before checkout.
+
+  - Cart is prepared for checkout.
+
+success_criteria:
+
+  - Products can be added successfully.
+
+  - Quantities update correctly.
+
+  - Out-of-stock products cannot proceed to checkout.
+
+  - Cart total is always accurate.
+
+dependencies:
+
+  - Product Service
+
+  - Inventory Service
+
+  - Pricing Rules
+
+related_apis:
+
+  - API-002
+
+related_data_models:
+
+  - DM-002
+
+future_extensions:
+
+  - Coupon system
+
+  - Gift cards
+
+  - Saved carts
+
+  - Wishlist integration
+
+  - Recently viewed products
+
+core_principle: >
+
+  The shopping cart must always reflect
+  accurate pricing, available inventory,
+  and provide a frictionless path to checkout.

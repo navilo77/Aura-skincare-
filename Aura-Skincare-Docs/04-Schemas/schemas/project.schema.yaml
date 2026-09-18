@@ -1,0 +1,162 @@
+﻿metadata:
+
+  id: PROJECT-SCHEMA
+
+  title: Project Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the structure of the Aura project.
+    Represents the highest-level project information
+    used throughout the documentation system.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - project.id
+
+  - project.name
+
+  - project.version
+
+  - project.status
+
+  - project.owner
+
+  - project.description
+
+optional:
+
+  - project.repository
+
+  - project.documentation
+
+  - project.website
+
+  - project.tags
+
+  - project.modules
+
+  - project.integrations
+
+types:
+
+  project.id: string
+
+  project.name: string
+
+  project.version: string
+
+  project.status: string
+
+  project.owner: string
+
+  project.description: string
+
+  project.repository: string
+
+  project.documentation: string
+
+  project.website: string
+
+  project.tags: array
+
+  project.modules: array
+
+  project.integrations: array
+
+validation:
+
+  project.id:
+
+    required: true
+
+    unique: true
+
+  project.name:
+
+    min_length: 3
+
+  project.version:
+
+    semantic_version: true
+
+  project.status:
+
+    allowed:
+
+      - Planning
+
+      - Development
+
+      - Testing
+
+      - Production
+
+      - Archived
+
+relationships:
+
+  requirements:
+
+    many: true
+
+  features:
+
+    many: true
+
+  architecture:
+
+    one: true
+
+  database:
+
+    one: true
+
+  apis:
+
+    many: true
+
+  agents:
+
+    many: true
+
+  integrations:
+
+    many: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable: true
+
+  machine_validated: true
+
+core_principle: >
+
+  The project schema represents the root object
+  that connects every document inside the Aura
+  documentation ecosystem.

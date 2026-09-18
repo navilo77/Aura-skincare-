@@ -1,0 +1,139 @@
+﻿metadata:
+
+  id: FEATURE-SCHEMA
+
+  title: Feature Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for all system
+    features implemented within the Aura platform.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - feature.id
+
+  - feature.title
+
+  - feature.module
+
+  - feature.priority
+
+  - feature.status
+
+  - feature.description
+
+optional:
+
+  - feature.requirements
+
+  - feature.apis
+
+  - feature.agents
+
+  - feature.dependencies
+
+  - feature.notes
+
+types:
+
+  feature.id: string
+
+  feature.title: string
+
+  feature.module: string
+
+  feature.priority: string
+
+  feature.status: string
+
+  feature.description: string
+
+  feature.requirements: array
+
+  feature.apis: array
+
+  feature.agents: array
+
+  feature.dependencies: array
+
+  feature.notes: string
+
+validation:
+
+  feature.id:
+
+    pattern: "^FEAT-[0-9]{3}$"
+
+  feature.priority:
+
+    allowed:
+
+      - Critical
+
+      - High
+
+      - Medium
+
+      - Low
+
+  feature.status:
+
+    allowed:
+
+      - Planned
+
+      - Development
+
+      - Testing
+
+      - Completed
+
+      - Deprecated
+
+relationships:
+
+  requirements:
+
+    many: true
+
+  apis:
+
+    many: true
+
+  agents:
+
+    many: true
+
+  database:
+
+    many: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable

@@ -1,0 +1,108 @@
+﻿metadata:
+
+  id: NFR-002
+
+  title: Security and Compliance Requirements
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Non-Functional Requirement
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+constraint:
+
+  id: NFR-002
+
+  type: Security
+
+  priority: Critical
+
+  description: >
+
+    The Aura platform shall protect customer data,
+    secure AI interactions, enforce authentication
+    and authorization, and maintain auditability.
+
+security_requirements:
+
+  authentication:
+
+    required: true
+
+    method: JWT
+
+  authorization:
+
+    role_based_access: true
+
+  encryption:
+
+    https_only: true
+
+    password_hashing: true
+
+  secrets:
+
+    environment_variables: true
+
+    no_hardcoded_secrets: true
+
+  audit_logging:
+
+    enabled: true
+
+  ai_security:
+
+    prompt_validation: true
+
+    prompt_injection_protection: true
+
+    output_validation: true
+
+  privacy:
+
+    collect_minimum_customer_data: true
+
+    customer_data_protected: true
+
+compliance:
+
+  documentation_required: true
+
+  security_review_required: true
+
+  version_control_required: true
+
+acceptance_criteria:
+
+  - Protected endpoints require authentication.
+
+  - Permissions are role-based.
+
+  - Passwords are never stored in plain text.
+
+  - Secrets are never committed to Git.
+
+  - AI inputs and outputs are validated.
+
+related_documents:
+
+  - authentication.md
+
+  - authorization.md
+
+  - prompt-security.md
+
+  - threat-model.md
+
+core_principle: >
+
+  Security is built into every layer
+  of the Aura platform by design.

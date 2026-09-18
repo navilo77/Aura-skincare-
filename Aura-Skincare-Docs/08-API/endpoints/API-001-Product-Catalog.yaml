@@ -1,0 +1,60 @@
+﻿metadata:
+
+  id: API-001
+
+  title: Product Catalog API
+
+  version: 1.0
+
+  status: Approved
+
+endpoint:
+
+  path: /api/v1/products
+
+  method: GET
+
+description: >
+
+  Returns the available skincare products with
+  filtering, searching, and pagination support.
+
+authentication:
+
+  required: true
+
+  type: Bearer JWT
+
+query:
+
+  category: string
+
+  search: string
+
+  page: integer
+
+  limit: integer
+
+response:
+
+  success:
+
+    products:
+
+      - product_id
+
+      - name
+
+      - category
+
+      - price
+
+      - stock
+
+errors:
+
+  - VALIDATION_ERROR
+
+  - UNAUTHORIZED
+
+  - INTERNAL_SERVER_ERROR

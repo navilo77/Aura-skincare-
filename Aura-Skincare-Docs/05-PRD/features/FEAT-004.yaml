@@ -1,0 +1,302 @@
+metadata:
+
+  id: FEAT-004
+
+  title: Checkout and Order Processing
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Feature
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+feature:
+
+  id: FEAT-004
+
+  type: Core Feature
+
+  priority: Critical
+
+  description: >
+
+    Enables customers to securely complete checkout,
+    process payments, create orders, initiate delivery,
+    and receive order confirmations through multiple channels.
+
+business_value:
+
+  - Increase successful purchases
+
+  - Improve customer confidence
+
+  - Reduce checkout abandonment
+
+  - Automate order lifecycle
+
+supports_requirement:
+
+  - REQ-002
+
+actors:
+
+  primary:
+
+    - Customer
+
+  secondary:
+
+    - Order Service
+
+    - Payment Gateway
+
+    - Inventory Service
+
+    - Courier Service
+
+    - Notification Service
+
+trigger:
+
+  Customer clicks "Place Order".
+
+inputs:
+
+  - Customer Information
+
+  - Shipping Address
+
+  - Cart Items
+
+  - Payment Method
+
+  - Delivery Preference
+
+outputs:
+
+  - Order Created
+
+  - Payment Status
+
+  - Order Confirmation
+
+  - Tracking Number
+
+  - Notifications Sent
+
+main_flow:
+
+  - Validate shopping cart.
+
+  - Validate inventory.
+
+  - Validate shipping information.
+
+  - Select payment method.
+
+  - Process payment.
+
+  - Generate order number (format: ORD-{timestamp}-{random}).
+
+  - Create order with status pending.
+
+  - Create order items with product snapshot.
+
+  - Create shipping address.
+
+  - Create billing address.
+
+  - Reserve or update inventory.
+
+  - Send confirmation message.
+
+  - Send WhatsApp notification.
+
+  - Send email confirmation.
+
+  - Enable order tracking.
+
+business_rules:
+
+  - Order must have at least one item.
+
+  - Order number is unique and auto-generated.
+
+  - Order status transitions: pending → processing → shipped → delivered.
+
+  - Orders can be cancelled from pending or processing status.
+
+  - Completed orders (delivered/cancelled) cannot be modified.
+
+  - Completed orders (delivered/cancelled) cannot be deleted.
+
+  - Product must exist and be active to be added to order.
+
+  - Stock quantity must be sufficient for order items.
+
+  - Order total is recalculated when items change.
+
+  - Shipping and billing addresses are optional but at most one per order.
+
+  - Currency must be a 3-character ISO code.
+
+  - OrderItem captures product snapshot (name, sku, variant_name, unit_price).
+
+status_transitions:
+
+  pending:
+
+    - processing
+
+    - cancelled
+
+  processing:
+
+    - shipped
+
+    - cancelled
+
+  shipped:
+
+    - delivered
+
+  delivered: []
+
+  cancelled: []
+
+implementation:
+
+  module: order
+
+  models:
+
+    - Order
+
+    - OrderItem
+
+    - ShippingAddress
+
+    - BillingAddress
+
+  repositories:
+
+    - OrderRepository
+
+    - OrderItemRepository
+
+    - ShippingAddressRepository
+
+    - BillingAddressRepository
+
+  services:
+
+    - OrderService
+
+    - OrderItemService
+
+    - ShippingAddressService
+
+    - BillingAddressService
+
+  schemas:
+
+    - OrderCreate, OrderUpdate, OrderRead, OrderList, OrderDetail
+
+    - OrderItemCreateRequest, OrderItemUpdate, OrderItemRead, OrderItemList
+
+    - ShippingAddressCreateRequest, ShippingAddressUpdate, ShippingAddressRead
+
+    - BillingAddressCreateRequest, BillingAddressUpdate, BillingAddressRead
+
+alternative_flows:
+
+  payment_failed:
+
+    - Display payment failure.
+
+    - Allow retry.
+
+    - Keep cart unchanged.
+
+  inventory_changed:
+
+    - Inform customer.
+
+    - Update cart.
+
+    - Prevent checkout.
+
+  courier_unavailable:
+
+    - Mark order as Pending Dispatch.
+
+    - Notify operations team.
+
+success_criteria:
+
+  - Secure payment completed.
+
+  - Order successfully created.
+
+  - Inventory updated correctly.
+
+  - Confirmation delivered.
+
+  - Order tracking available.
+
+dependencies:
+
+  - Payment Gateway
+
+  - Inventory Service
+
+  - Courier Integration
+
+  - Notification Service
+
+  - Order Service
+
+related_apis:
+
+  - API-002
+
+  - API-003
+
+  - API-005
+
+related_data_models:
+
+  - DM-002
+
+  - DM-003
+
+  - DM-004
+
+future_extensions:
+
+  - Multiple payment gateways
+
+  - Partial payment
+
+  - Installment payment
+
+  - Coupon engine
+
+  - Loyalty points
+
+  - Gift vouchers
+
+  - Multi-address delivery
+
+core_principle: >
+
+  Every checkout must be secure,
+  transparent, reliable, and easy,
+  ensuring customers can confidently
+  complete their purchase.

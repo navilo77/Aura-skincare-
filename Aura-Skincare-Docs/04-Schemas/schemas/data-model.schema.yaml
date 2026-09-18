@@ -1,0 +1,123 @@
+﻿metadata:
+
+  id: DATA-MODEL-SCHEMA
+
+  title: Data Model Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for all logical
+    data models used within the Aura platform.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - model.id
+
+  - model.name
+
+  - model.entity
+
+  - model.status
+
+  - model.description
+
+optional:
+
+  - model.fields
+
+  - model.relationships
+
+  - model.indexes
+
+  - model.constraints
+
+  - model.notes
+
+types:
+
+  model.id: string
+
+  model.name: string
+
+  model.entity: string
+
+  model.status: string
+
+  model.description: string
+
+  model.fields: array
+
+  model.relationships: array
+
+  model.indexes: array
+
+  model.constraints: array
+
+  model.notes: string
+
+validation:
+
+  model.id:
+
+    pattern: "^DM-[0-9]{3}$"
+
+  model.status:
+
+    allowed:
+
+      - Draft
+
+      - Approved
+
+      - Deprecated
+
+relationships:
+
+  database:
+
+    one: true
+
+  apis:
+
+    many: true
+
+  features:
+
+    many: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable: true
+
+  machine_validated: true
+
+core_principle: >
+
+  Every data model must represent a single business
+  entity with clearly defined fields, relationships,
+  and validation rules.

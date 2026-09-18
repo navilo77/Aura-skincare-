@@ -1,0 +1,159 @@
+metadata:
+  id: API-003
+  title: Customer Profile API
+  version: 1.0
+  status: Approved
+  updated: 2026-09-17
+
+base_path: /api/v1/customers
+
+authentication:
+  required: true
+  type: Bearer JWT
+
+entities:
+  - Customer
+  - Address
+  - Conversation
+
+enums:
+  customer_status:
+    - active
+    - inactive
+    - suspended
+
+operations:
+  - Create Customer
+  - Get Customer
+  - List Customers
+  - Update Customer
+  - Delete Customer
+  - Get Customer Profile
+  - Update Customer Profile
+
+endpoints:
+  create_customer:
+    method: POST
+    path: ""
+    request:
+      full_name: string
+      email: string
+      phone: string (optional)
+      status: string (default: active)
+      skin_type: string (optional)
+      skin_concerns: array (optional)
+    response:
+      customer_id: uuid
+      full_name: string
+      email: string
+      phone: string
+      status: string
+      skin_type: string
+      skin_concerns: array
+      created_at: datetime
+      updated_at: datetime
+
+  get_customer:
+    method: GET
+    path: /{customer_id}
+    response:
+      customer_id: uuid
+      full_name: string
+      email: string
+      phone: string
+      status: string
+      skin_type: string
+      skin_concerns: array
+      created_at: datetime
+      updated_at: datetime
+
+  list_customers:
+    method: GET
+    path: ""
+    query:
+      skip: integer (default: 0)
+      limit: integer (default: 20)
+      status: string (optional)
+      search: string (optional)
+    response:
+      - customer_id: uuid
+        full_name: string
+        email: string
+        phone: string
+        status: string
+        skin_type: string
+        created_at: datetime
+        updated_at: datetime
+
+  update_customer:
+    method: PATCH
+    path: /{customer_id}
+    request:
+      full_name: string (optional)
+      email: string (optional)
+      phone: string (optional)
+      status: string (optional)
+      skin_type: string (optional)
+      skin_concerns: array (optional)
+    response:
+      customer_id: uuid
+      full_name: string
+      email: string
+      phone: string
+      status: string
+      skin_type: string
+      skin_concerns: array
+      created_at: datetime
+      updated_at: datetime
+
+  delete_customer:
+    method: DELETE
+    path: /{customer_id}
+    response:
+      status_code: 204
+
+  get_profile:
+    method: GET
+    path: /profile
+    response:
+      customer_id: uuid
+      full_name: string
+      email: string
+      phone: string
+      skin_type: string
+      skin_concerns: array
+
+  update_profile:
+    method: PUT
+    path: /profile
+    request:
+      full_name: string
+      email: string
+      phone: string (optional)
+      skin_type: string (optional)
+      skin_concerns: array (optional)
+    response:
+      customer_id: uuid
+      full_name: string
+      email: string
+      phone: string
+      skin_type: string
+      skin_concerns: array
+
+business_rules:
+  - Email must be unique across all customers
+  - Phone must be unique if provided
+  - Email must be valid format
+  - Customer status must be one of: active, inactive, suspended
+  - Soft delete only
+  - Cannot delete customer with active orders
+  - Skin type is optional
+  - Skin concerns is optional JSON array
+
+errors:
+  - 400: Validation Error
+  - 401: Unauthorized
+  - 403: Forbidden
+  - 404: Customer not found
+  - 409: Duplicate email or phone
+  - 422: Unprocessable Entity

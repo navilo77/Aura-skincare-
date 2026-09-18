@@ -1,0 +1,101 @@
+﻿metadata:
+
+  id: NFR-001
+
+  title: System Quality Attributes
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Non-Functional Requirement
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+constraint:
+
+  id: NFR-001
+
+  type: Quality Attribute
+
+  priority: Critical
+
+  description: >
+
+    The Aura platform shall meet defined quality
+    standards for performance, availability,
+    reliability, scalability, maintainability,
+    usability, and observability.
+
+quality_attributes:
+
+  availability:
+
+    target: "99%"
+
+  performance:
+
+    api_response: "< 2 seconds"
+
+    ai_response: "< 5 seconds"
+
+  reliability:
+
+    target: "Recover gracefully from failures."
+
+  scalability:
+
+    architecture: "Modular Monolith"
+
+    future: "Microservices Ready"
+
+  maintainability:
+
+    documentation_first: true
+
+    architecture_first: true
+
+    coding_standards: required
+
+  usability:
+
+    beginner_friendly: true
+
+    mobile_responsive: true
+
+  observability:
+
+    structured_logging: true
+
+    health_checks: true
+
+    metrics_collection: true
+
+acceptance_criteria:
+
+  - APIs respond within defined limits.
+
+  - AI responses meet performance targets.
+
+  - Documentation remains synchronized.
+
+  - System failures are logged.
+
+  - Health checks are available.
+
+related_documents:
+
+  - architecture.instance.yaml
+
+  - observability.md
+
+  - monitoring.md
+
+core_principle: >
+
+  Quality is a core feature,
+  not an afterthought.

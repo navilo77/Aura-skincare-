@@ -1,0 +1,4 @@
+[project]
+name = "aura-backend"
+version = "0.1.0"
+description = "Aura Skincare backend"

@@ -1,0 +1,125 @@
+﻿metadata:
+
+  id: COMMON-SCHEMA
+
+  title: Common Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Base schema inherited by all Aura YAML documents.
+    Defines common metadata, validation rules,
+    identification, and lifecycle management.
+
+required:
+
+  - metadata.id
+
+  - metadata.title
+
+  - metadata.version
+
+  - metadata.status
+
+  - metadata.owner
+
+  - metadata.category
+
+optional:
+
+  - metadata.description
+
+  - metadata.created
+
+  - metadata.updated
+
+  - metadata.tags
+
+  - references
+
+  - validation
+
+types:
+
+  metadata.id: string
+
+  metadata.title: string
+
+  metadata.version: string
+
+  metadata.status: string
+
+  metadata.owner: string
+
+  metadata.category: string
+
+  metadata.description: string
+
+  metadata.created: date
+
+  metadata.updated: date
+
+  metadata.tags: array
+
+validation:
+
+  status:
+
+    allowed:
+
+      - Draft
+
+      - Review
+
+      - Approved
+
+      - Deprecated
+
+      - Archived
+
+  version:
+
+    pattern: "major.minor"
+
+  owner:
+
+    required: true
+
+  id:
+
+    unique: true
+
+references:
+
+  supports: true
+
+inheritance:
+
+  parent: null
+
+  reusable: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  machine_validated: true
+
+core_principle: >
+
+  Every Aura YAML document inherits this schema
+  before applying its own specific rules.

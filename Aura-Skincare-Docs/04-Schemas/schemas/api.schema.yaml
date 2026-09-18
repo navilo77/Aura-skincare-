@@ -1,0 +1,157 @@
+﻿metadata:
+
+  id: API-SCHEMA
+
+  title: API Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for all API
+    specifications used within the Aura platform.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - api.id
+
+  - api.name
+
+  - api.version
+
+  - api.method
+
+  - api.endpoint
+
+  - api.status
+
+optional:
+
+  - api.description
+
+  - api.authentication
+
+  - api.request
+
+  - api.response
+
+  - api.errors
+
+  - api.rate_limit
+
+  - api.permissions
+
+  - api.notes
+
+types:
+
+  api.id: string
+
+  api.name: string
+
+  api.version: string
+
+  api.method: string
+
+  api.endpoint: string
+
+  api.status: string
+
+  api.description: string
+
+  api.authentication: string
+
+  api.request: object
+
+  api.response: object
+
+  api.errors: array
+
+  api.rate_limit: string
+
+  api.permissions: array
+
+  api.notes: string
+
+validation:
+
+  api.id:
+
+    pattern: "^API-[0-9]{3}$"
+
+  api.method:
+
+    allowed:
+
+      - GET
+
+      - POST
+
+      - PUT
+
+      - PATCH
+
+      - DELETE
+
+  api.status:
+
+    allowed:
+
+      - Draft
+
+      - Approved
+
+      - Deprecated
+
+relationships:
+
+  requirements:
+
+    many: true
+
+  features:
+
+    many: true
+
+  data_models:
+
+    many: true
+
+  agents:
+
+    many: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable: true
+
+  machine_validated: true
+
+core_principle: >
+
+  Every API must have a clear contract,
+  predictable request and response formats,
+  and complete documentation before implementation.

@@ -1,0 +1,60 @@
+﻿metadata:
+
+  id: API-002
+
+  title: Product Recommendation API
+
+  version: 1.0
+
+  status: Approved
+
+endpoint:
+
+  path: /api/v1/recommendations
+
+  method: POST
+
+description: >
+
+  Accepts customer skin profile and returns
+  AI-generated skincare product recommendations.
+
+authentication:
+
+  required: true
+
+  type: Bearer JWT
+
+request:
+
+  body:
+
+    skin_type: string
+
+    concerns:
+
+      - string
+
+    age: integer
+
+    gender: string
+
+response:
+
+  success:
+
+    recommendations:
+
+      - product_id
+
+      - product_name
+
+      - confidence
+
+errors:
+
+  - VALIDATION_ERROR
+
+  - UNAUTHORIZED
+
+  - INTERNAL_SERVER_ERROR

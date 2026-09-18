@@ -1,0 +1,58 @@
+metadata:
+
+  id: EVAL-003
+
+  title: Order Management Validation
+
+  version: 1.0
+
+  status: Approved
+
+feature:
+
+  FEAT-003
+
+api:
+
+  API-004
+
+purpose:
+
+  Validate order creation, retrieval, cancellation, and history.
+
+preconditions:
+
+  - Customer authenticated.
+  - Products available.
+  - Cart contains valid items.
+
+test_cases:
+
+  - id: TC-001
+    name: Create Order
+    expected: Order created successfully.
+
+  - id: TC-002
+    name: View Order
+    expected: Order details returned.
+
+  - id: TC-003
+    name: Order History
+    expected: Customer order history displayed.
+
+  - id: TC-004
+    name: Cancel Pending Order
+    expected: Order status updated to Cancelled.
+
+  - id: TC-005
+    name: Cancel Delivered Order
+    expected: Request rejected.
+
+success_criteria:
+
+  success_rate: "100%"
+  response_time: "<2 seconds"
+
+result:
+
+  status: Pending

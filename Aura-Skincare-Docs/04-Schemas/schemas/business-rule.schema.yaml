@@ -1,0 +1,46 @@
+﻿metadata:
+
+  id: BUSINESS-RULE-SCHEMA
+
+  title: Business Rule Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the official structure for business rules,
+    policies, operational constraints, and governance
+    used throughout the Aura platform.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - rule.id
+
+  - rule.title
+
+  - rule.category
+
+  - rule.status
+
+  - rule.priority
+
+  - rule.description
+
+optional:
+
+ 

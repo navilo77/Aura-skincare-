@@ -1,0 +1,53 @@
+metadata:
+
+  id: EVAL-004
+
+  title: Payment Processing Validation
+
+  version: 1.0
+
+  status: Approved
+
+feature:
+
+  FEAT-004
+
+api:
+
+  API-005
+
+purpose:
+
+  Validate payment creation, verification, and status updates.
+
+preconditions:
+
+  - Valid order exists.
+  - Payment gateway available.
+
+test_cases:
+
+  - id: TC-001
+    name: Successful Payment
+    expected: Payment marked Successful.
+
+  - id: TC-002
+    name: Failed Payment
+    expected: Payment marked Failed.
+
+  - id: TC-003
+    name: Invalid Payment Method
+    expected: Validation error.
+
+  - id: TC-004
+    name: Duplicate Payment
+    expected: Request rejected.
+
+success_criteria:
+
+  payment_accuracy: "100%"
+  gateway_sync: "100%"
+
+result:
+
+  status: Pending

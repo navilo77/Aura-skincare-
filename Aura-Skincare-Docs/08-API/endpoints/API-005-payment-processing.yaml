@@ -1,0 +1,39 @@
+metadata:
+  id: API-005
+  title: Payment Processing API
+  version: 1.0
+  status: Approved
+
+endpoint:
+  base_path: /api/v1/payments
+
+authentication:
+  required: true
+
+operations:
+
+  - Create Payment
+
+  - Verify Payment
+
+  - Payment Status
+
+request:
+
+  order_id: uuid
+
+  payment_method: string
+
+response:
+
+  payment_id: uuid
+
+  status: Pending
+
+errors:
+
+  - PAYMENT_FAILED
+
+  - INVALID_PAYMENT
+
+  - ORDER_NOT_FOUND

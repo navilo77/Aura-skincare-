@@ -1,0 +1,51 @@
+﻿metadata:
+
+  id: ARCH-XXX
+
+  title:
+
+  version: 1.0
+
+  status: Draft
+
+  owner:
+
+architecture:
+
+  type:
+
+  description:
+
+objectives:
+
+scope:
+
+components:
+
+interfaces:
+
+data_flow:
+
+security:
+
+scalability:
+
+availability:
+
+performance:
+
+dependencies:
+
+constraints:
+
+assumptions:
+
+risks:
+
+deployment:
+
+monitoring:
+
+related_documents:
+
+notes:

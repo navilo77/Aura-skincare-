@@ -1,0 +1,156 @@
+﻿# Requirement Schema
+# Placeholder
+metadata:
+
+  id: REQUIREMENT-SCHEMA
+
+  title: Requirement Schema
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Schema
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+definition:
+
+  description: >
+    Defines the standard structure for all business
+    and functional requirements used throughout
+    the Aura documentation system.
+
+inherits:
+
+  - common.schema.yaml
+
+required:
+
+  - requirement.id
+
+  - requirement.title
+
+  - requirement.type
+
+  - requirement.priority
+
+  - requirement.status
+
+  - requirement.description
+
+optional:
+
+  - requirement.reason
+
+  - requirement.acceptance_criteria
+
+  - requirement.dependencies
+
+  - requirement.related_features
+
+  - requirement.related_apis
+
+  - requirement.related_agents
+
+  - requirement.notes
+
+types:
+
+  requirement.id: string
+
+  requirement.title: string
+
+  requirement.type: string
+
+  requirement.priority: string
+
+  requirement.status: string
+
+  requirement.description: string
+
+  requirement.reason: string
+
+  requirement.acceptance_criteria: array
+
+  requirement.dependencies: array
+
+  requirement.related_features: array
+
+  requirement.related_apis: array
+
+  requirement.related_agents: array
+
+  requirement.notes: string
+
+validation:
+
+  requirement.id:
+
+    pattern: "^REQ-[0-9]{3}$"
+
+  requirement.priority:
+
+    allowed:
+
+      - Critical
+
+      - High
+
+      - Medium
+
+      - Low
+
+  requirement.status:
+
+    allowed:
+
+      - Draft
+
+      - Approved
+
+      - Implemented
+
+      - Deprecated
+
+relationships:
+
+  features:
+
+    many: true
+
+  apis:
+
+    many: true
+
+  agents:
+
+    many: true
+
+  business_rules:
+
+    many: true
+
+references:
+
+  supports: true
+
+ai:
+
+  readable: true
+
+  writable: true
+
+  searchable: true
+
+  machine_validated: true
+
+core_principle: >
+
+  Every business requirement must be uniquely
+  identified, traceable, and linked to the
+  features, APIs, and AI agents that implement it.

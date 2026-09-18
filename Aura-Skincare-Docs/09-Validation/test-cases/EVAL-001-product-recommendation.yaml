@@ -1,0 +1,55 @@
+metadata:
+
+  id: EVAL-001
+
+  title: Product Recommendation Validation
+
+  version: 1.0
+
+  status: Approved
+
+feature:
+
+  FEAT-001
+
+api:
+
+  API-002
+
+purpose:
+
+  Validate AI-generated skincare product recommendations.
+
+preconditions:
+
+  - Customer is authenticated.
+  - Product catalog is available.
+  - AI service is operational.
+
+test_cases:
+
+  - id: TC-001
+    name: Normal Recommendation
+    expected: Matching products are returned.
+
+  - id: TC-002
+    name: Sensitive Skin
+    expected: Products comply with business rules.
+
+  - id: TC-003
+    name: Unknown Skin Type
+    expected: Validation error returned.
+
+  - id: TC-004
+    name: Empty Request
+    expected: HTTP 400 returned.
+
+success_criteria:
+
+  recommendation_accuracy: ">=90%"
+  hallucination_rate: "<=2%"
+  response_time: "<3 seconds"
+
+result:
+
+  status: Pending

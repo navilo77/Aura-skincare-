@@ -1,0 +1,45 @@
+﻿metadata:
+
+  id: REQ-XXX
+
+  title:
+
+  version: 1.0
+
+  status: Draft
+
+  priority:
+
+  owner:
+
+requirement:
+
+  type:
+
+  description:
+
+business_reason:
+
+scope:
+
+inputs:
+
+outputs:
+
+constraints:
+
+assumptions:
+
+acceptance_criteria:
+
+validation_method:
+
+dependencies:
+
+related_features:
+
+related_api:
+
+related_documents:
+
+notes:

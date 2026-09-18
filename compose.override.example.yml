@@ -1,0 +1,12 @@
+# Compose override example for Aura Skincare
+# Copy to docker-compose.override.yml for local overrides.
+
+services:
+  backend:
+    environment:
+      DEBUG: "true"
+      LOG_LEVEL: DEBUG
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"

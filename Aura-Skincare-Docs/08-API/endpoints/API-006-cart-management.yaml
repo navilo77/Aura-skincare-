@@ -1,0 +1,38 @@
+metadata:
+  id: API-006
+  title: Cart Management API
+  version: 1.0
+  status: Approved
+
+endpoint:
+  base_path: /api/v1/cart
+
+authentication:
+  required: true
+
+operations:
+
+  - Add Item
+
+  - Remove Item
+
+  - Update Quantity
+
+  - View Cart
+
+  - Clear Cart
+
+response:
+
+  cart_id: uuid
+
+  items:
+
+    - product_id
+      quantity: integer
+
+errors:
+
+  - PRODUCT_NOT_FOUND
+
+  - INVALID_QUANTITY

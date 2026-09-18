@@ -1,0 +1,135 @@
+﻿metadata:
+
+  id: FEAT-001
+
+  title: AI Skincare Consultation
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Feature
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+feature:
+
+  id: FEAT-001
+
+  type: Core Feature
+
+  priority: Critical
+
+  description: >
+
+    Provides customers with an AI-powered skincare
+    consultation that understands their needs,
+    asks relevant questions, and recommends
+    personalized skincare routines.
+
+business_value:
+
+  - Increase customer confidence
+
+  - Improve product discovery
+
+  - Reduce purchase uncertainty
+
+  - Increase conversion rate
+
+supports_requirement:
+
+  - REQ-001
+
+actors:
+
+  primary:
+
+    - Customer
+
+  secondary:
+
+    - Router Agent
+
+    - Customer AI Agent
+
+trigger:
+
+  Customer starts an AI consultation.
+
+inputs:
+
+  - Customer message
+
+  - Skin concerns
+
+  - Skin type
+
+  - Customer preferences
+
+outputs:
+
+  - Personalized skincare routine
+
+  - Product recommendations
+
+  - Explanation for recommendations
+
+main_flow:
+
+  - Customer starts conversation.
+
+  - Router Agent identifies the request.
+
+  - Request is forwarded to Customer AI Agent.
+
+  - AI asks follow-up questions if necessary.
+
+  - AI analyzes customer needs.
+
+  - AI recommends products.
+
+  - AI explains why each product is recommended.
+
+success_criteria:
+
+  - Personalized recommendations
+
+  - Accurate intent detection
+
+  - Easy-to-understand responses
+
+dependencies:
+
+  - Customer AI Agent
+
+  - Router Agent
+
+  - Product Database
+
+  - Business Rules
+
+related_apis:
+
+  - API-001
+
+related_data_models:
+
+  - DM-001
+
+future_extensions:
+
+  - Image-based skin analysis
+
+  - Multi-language consultation
+
+  - Voice consultation
+
+core_principle: >
+
+  Every consultation should help customers
+  make informed skincare decisions with confidence.

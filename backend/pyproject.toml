@@ -1,0 +1,48 @@
+[project]
+name = "aura-backend"
+version = "0.1.0"
+description = "Aura Skincare backend"
+requires-python = ">=3.12"
+
+[dependency-groups]
+dev = [
+    "fastapi[standard]>=0.115",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "pydantic-settings>=2.6",
+    "pytest>=8.3",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "psycopg[binary]>=3.2",
+    "passlib[bcrypt]>=1.7",
+    "python-jose[cryptography]>=3.3",
+    "aiosqlite>=0.20",
+    "asyncpg>=0.30",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"alembic/versions/*" = ["E501"]
+"app/modules/*/models/*.py" = ["F821", "UP037"]
+
+[tool.alembic]
+script_location = "alembic"
+sqlalchemy.url = "postgresql+asyncpg://postgres:[YOUR-PASSWORD]@db.[PROJECT-ID].supabase.co:6543/postgres"

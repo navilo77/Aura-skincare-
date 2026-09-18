@@ -1,0 +1,57 @@
+﻿metadata:
+
+  id: API-XXX
+
+  title:
+
+  version: 1.0
+
+  status: Draft
+
+endpoint:
+
+  path:
+
+  method:
+
+description:
+
+authentication:
+
+  required: true
+
+  type:
+
+request:
+
+  headers:
+
+  query:
+
+  path_parameters:
+
+  body:
+
+response:
+
+  success:
+
+  errors:
+
+status_codes:
+
+rate_limit:
+
+validation_rules:
+
+business_rules:
+
+logging:
+
+security:
+
+dependencies:
+
+related_documents:
+
+notes:

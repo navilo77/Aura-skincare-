@@ -1,0 +1,174 @@
+﻿metadata:
+
+  id: ARCH-001
+
+  title: Aura Architecture
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Software Architecture
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+architecture:
+
+  name: Aura Platform
+
+  style: Modular Monolith
+
+  language: Python
+
+  framework: FastAPI
+
+  ai_framework: LangGraph
+
+  database: Supabase (Managed PostgreSQL)
+
+  orm: SQLAlchemy
+
+  cache: None (MVP)
+
+  message_queue: None (MVP)
+
+  deployment: Docker Compose + Supabase Cloud
+
+  web_server: Nginx
+
+layers:
+
+  - Presentation Layer
+
+  - API Layer
+
+  - AI Layer
+
+  - Business Layer
+
+  - Integration Layer
+
+  - Data Layer
+
+  - Observability Layer
+
+components:
+
+  presentation:
+
+    - Website
+
+    - Admin Dashboard
+
+    - Customer Dashboard
+
+    - WhatsApp
+
+    - Messenger
+
+    - Instagram
+
+  api:
+
+    - REST API
+
+    - Authentication
+
+    - Authorization
+
+    - Validation
+
+  ai:
+
+    - Router Agent
+
+    - Customer AI Agent
+
+    - Admin AI Agent
+
+    - Marketing AI Agent
+
+    - Development AI Agent
+
+  business:
+
+    - Product Service
+
+    - Customer Service
+
+    - Order Service
+
+    - Order Item Service
+
+    - Shipping Address Service
+
+    - Billing Address Service
+
+    - Inventory Service
+
+    - Payment Service
+
+    - Analytics Service
+
+  integrations:
+
+    - Payment Gateway
+
+    - Courier
+
+    - Email
+
+    - WhatsApp Business API
+
+    - Meta Messenger API
+
+    - Instagram Messaging API
+
+  data:
+
+    - Supabase (Managed PostgreSQL)
+
+    - Supabase Storage
+
+  observability:
+
+    - Logging
+
+    - Metrics
+
+    - Health Checks
+
+principles:
+
+  - Documentation First
+
+  - Architecture First
+
+  - Security First
+
+  - API First
+
+  - AI First
+
+  - Modular Design
+
+  - Scalability Ready
+
+future_upgrade:
+
+  modular_monolith:
+
+    upgrade_to_microservices: true
+
+    upgrade_without_major_rewrite: true
+
+core_principle: >
+
+  Aura follows a Documentation-First,
+  AI-First, Modular Monolith architecture
+  designed for future migration to
+  Microservices without rewriting the system.

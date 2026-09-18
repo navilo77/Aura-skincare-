@@ -1,0 +1,180 @@
+﻿metadata:
+
+  id: REQ-002
+
+  title: Customer Order Management
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Business Requirement
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+requirement:
+
+  id: REQ-002
+
+  type: Functional
+
+  priority: Critical
+
+  description: >
+
+    The system shall enable customers to complete
+    the full purchasing journey, including cart,
+    checkout, payment, order confirmation,
+    order tracking, and delivery updates.
+
+business_goal:
+
+  - Simplify the purchasing process
+
+  - Increase completed orders
+
+  - Reduce cart abandonment
+
+  - Improve customer experience
+
+actors:
+
+  primary:
+
+    - Customer
+
+  secondary:
+
+    - Order Service
+
+    - Payment Gateway
+
+    - Courier Service
+
+    - Customer AI Agent
+
+preconditions:
+
+  - Customer has selected one or more products
+
+  - Products are available in inventory
+
+trigger:
+
+  Customer proceeds to checkout.
+
+main_flow:
+
+  - Customer reviews cart.
+
+  - Customer enters shipping information.
+
+  - Customer selects payment method.
+
+  - Payment is processed.
+
+  - Order is created.
+
+  - Inventory is updated.
+
+  - Courier request is generated.
+
+  - Customer receives order confirmation.
+
+  - Customer tracks order status.
+
+  - Order is delivered.
+
+postconditions:
+
+  - Order successfully created
+
+  - Payment recorded
+
+  - Inventory updated
+
+  - Delivery initiated
+
+  - Customer notified
+
+acceptance_criteria:
+
+  - Customer can complete checkout.
+
+  - Payment status is accurately recorded.
+
+  - Inventory updates immediately after successful order.
+
+  - Order tracking is available.
+
+  - Confirmation message is sent after order creation.
+
+non_functional_requirements:
+
+  availability:
+
+    - 99%
+
+  performance:
+
+    - Checkout completed within acceptable response time
+
+  security:
+
+    - Payment information is never stored directly by Aura
+
+dependencies:
+
+  - Product Service
+
+  - Order Service
+
+  - Inventory Service
+
+  - Payment Gateway
+
+  - Courier Integration
+
+  - Notification Service
+
+related_features:
+
+  - FEAT-003
+
+  - FEAT-004
+
+related_apis:
+
+  - API-002
+
+  - API-003
+
+related_data_models:
+
+  - DM-002
+
+  - DM-003
+
+related_agents:
+
+  - customer-ai-agent
+
+success_metrics:
+
+  - Higher checkout completion rate
+
+  - Lower cart abandonment
+
+  - Faster order processing
+
+  - Higher customer satisfaction
+
+core_principle: >
+
+  Ordering products should be simple,
+  secure, reliable, and transparent,
+  allowing customers to purchase with confidence.

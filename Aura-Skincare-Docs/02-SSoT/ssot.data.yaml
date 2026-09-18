@@ -1,0 +1,108 @@
+﻿
+# ==========================================
+# Aura Skincare
+# Single Source of Truth (SSoT)
+# ==========================================
+
+metadata:
+  project: Aura Skincare
+  version: 1.0
+  status: Approved
+  owner: Aura Skincare
+  last_updated: 2026-09-17
+
+project:
+
+  name: Aura Skincare
+
+  type: AI-first Beauty Commerce Platform
+
+  architecture: Modular Monolith
+
+  ai_framework: LangGraph
+
+  backend: FastAPI
+
+  frontend: Next.js
+
+  database: Supabase (Managed PostgreSQL)
+
+  cache: Redis
+
+  automation: n8n
+
+  deployment: Docker Compose
+
+business:
+
+  currency: BDT
+
+  timezone: Asia/Dhaka
+
+  language: Bangla
+
+channels:
+
+  website: true
+
+  whatsapp: true
+
+  messenger: true
+
+  instagram_dm: future
+
+ai:
+
+  router: enabled
+
+  customer_ai: enabled
+
+  admin_ai: enabled
+
+  marketing_ai: enabled
+
+security:
+
+  authentication: enabled
+
+  authorization: enabled
+
+  zero_trust: enabled
+
+  audit_logging: enabled
+
+automation:
+
+  customer_support: enabled
+
+  marketing: enabled
+
+  notifications: enabled
+
+integrations:
+
+  payment: planned
+
+  courier: planned
+
+  analytics: enabled
+
+  email: planned
+
+principles:
+
+  documentation_first: true
+
+  ssot_required: true
+
+  human_approval: true
+
+  privacy_first: true
+
+  customer_trust_first: true
+
+version:
+
+  current: 1.0
+
+  release: MVP

@@ -1,0 +1,46 @@
+metadata:
+  id: API-007
+  title: Authentication API
+  version: 1.0
+  status: Approved
+
+endpoint:
+  base_path: /api/v1/auth
+
+operations:
+
+  - Register
+
+  - Login
+
+  - Refresh Token
+
+  - Logout
+
+authentication:
+
+  register: false
+
+  login: false
+
+  refresh: true
+
+request:
+
+  email: string
+
+  password: string
+
+response:
+
+  access_token: string
+
+  refresh_token: string
+
+errors:
+
+  - INVALID_CREDENTIALS
+
+  - ACCOUNT_LOCKED
+
+  - TOKEN_EXPIRED

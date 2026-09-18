@@ -1,0 +1,160 @@
+﻿metadata:
+
+  id: REQ-001
+
+  title: AI-Powered Customer Consultation
+
+  version: 1.0
+
+  status: Approved
+
+  owner: Aura Skincare
+
+  category: Business Requirement
+
+  created: 2026-09-15
+
+  updated: 2026-09-15
+
+requirement:
+
+  id: REQ-001
+
+  type: Functional
+
+  priority: Critical
+
+  description: >
+
+    The system shall provide an AI-powered skincare
+    consultation experience that understands customer
+    needs and recommends appropriate skincare products
+    before purchase.
+
+business_goal:
+
+  - Increase customer confidence
+
+  - Improve conversion rate
+
+  - Reduce product selection confusion
+
+  - Improve customer satisfaction
+
+actors:
+
+  primary:
+
+    - Customer
+
+  secondary:
+
+    - Customer AI Agent
+
+    - Router Agent
+
+preconditions:
+
+  - Customer opens Aura platform
+
+  - AI service is available
+
+trigger:
+
+  Customer requests skincare advice.
+
+main_flow:
+
+  - Customer starts conversation.
+
+  - Router Agent receives request.
+
+  - Router Agent forwards request to Customer AI Agent.
+
+  - Customer AI analyzes customer information.
+
+  - AI asks follow-up questions if required.
+
+  - AI recommends skincare routine.
+
+  - AI recommends suitable products.
+
+  - Customer views recommendations.
+
+postconditions:
+
+  - Recommendation generated
+
+  - Conversation logged
+
+  - Analytics updated
+
+acceptance_criteria:
+
+  - AI understands customer intent.
+
+  - AI provides personalized recommendations.
+
+  - Response time under 5 seconds.
+
+  - Recommendations follow business rules.
+
+  - Recommendations only include available products.
+
+non_functional_requirements:
+
+  availability:
+
+    - 99%
+
+  scalability:
+
+    - Future AI model upgrades supported
+
+  security:
+
+    - Customer data protected
+
+dependencies:
+
+  - Customer AI Agent
+
+  - Router Agent
+
+  - Product Database
+
+  - Recommendation Engine
+
+related_features:
+
+  - FEAT-001
+
+  - FEAT-002
+
+related_apis:
+
+  - API-001
+
+related_data_models:
+
+  - DM-001
+
+related_agents:
+
+  - customer-ai-agent
+
+  - router-agent
+
+success_metrics:
+
+  - Higher conversion rate
+
+  - Lower support requests
+
+  - Higher customer satisfaction
+
+core_principle: >
+
+  Every recommendation must be personalized,
+  explainable, trustworthy, and aligned with
+  Aura business rules.

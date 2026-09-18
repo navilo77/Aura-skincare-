@@ -1,0 +1,33 @@
+Route /openapi.json
+Route /docs
+Route /docs/oauth2-redirect
+Route /redoc
+      APIRoute /register
+      APIRoute /login
+      APIRoute /brands
+      APIRoute /brands/{brand_id}
+      APIRoute /brands
+      APIRoute /brands/{brand_id}
+      APIRoute /brands/{brand_id}
+      APIRoute /categories
+      APIRoute /categories/tree
+      APIRoute /categories/{category_id}
+      APIRoute /categories
+      APIRoute /categories/{category_id}
+      APIRoute /categories/{category_id}
+      APIRoute 
+      APIRoute /{product_id}
+      APIRoute 
+      APIRoute /{product_id}
+      APIRoute /{product_id}
+      APIRoute /images
+      APIRoute /images/{image_id}
+      APIRoute /images/{product_id}
+      APIRoute /images/{image_id}
+      APIRoute /images/{image_id}
+      APIRoute /variants
+      APIRoute /variants/{variant_id}
+      APIRoute /variants/{product_id}
+      APIRoute /variants/{variant_id}
+      APIRoute /variants/{variant_id}
+APIRoute /health
