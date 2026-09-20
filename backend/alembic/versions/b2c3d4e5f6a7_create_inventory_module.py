@@ -1,7 +1,7 @@
 """create inventory module
 
 Revision ID: b2c3d4e5f6a7
-Revises: 41e2eb274d18
+Revises: f4a1b2c3d4e5
 Create Date: 2026-09-17 15:38:15.000000
 """
 from collections.abc import Sequence
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision: str = 'b2c3d4e5f6a7'
-down_revision: str | None = '41e2eb274d18'
+down_revision: str | None = 'f4a1b2c3d4e5'
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

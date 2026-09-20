@@ -7,13 +7,19 @@ from pathlib import Path
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+import app.modules.admin.models  # noqa: F401
+import app.modules.ai.models  # noqa: F401
 import app.modules.analytics.models  # noqa: F401
 import app.modules.auth.models  # noqa: F401
+import app.modules.cart.models  # noqa: F401
 import app.modules.customer.models  # noqa: F401
 import app.modules.inventory.models  # noqa: F401
+import app.modules.marketing_ai.models  # noqa: F401
 import app.modules.notification.models  # noqa: F401
 import app.modules.order.models  # noqa: F401
+import app.modules.order_automation.models  # noqa: F401
 import app.modules.product.models  # noqa: F401
+import app.modules.wishlist.models  # noqa: F401
 from alembic import context
 from app.shared.database.base import Base
 

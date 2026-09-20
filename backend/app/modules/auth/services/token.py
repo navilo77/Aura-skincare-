@@ -1,18 +1,14 @@
 import uuid
-
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 from fastapi import HTTPException, status
 from jose import jwt
-from jose.utils import base64url_encode
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config.settings import settings
 from app.modules.auth.models import RefreshToken
 from app.modules.auth.repositories.refresh_token import RefreshTokenRepository
-from typing import Any
-
 from app.shared.security.jwt import decode_token
 
 
@@ -38,7 +34,7 @@ class TokenService:
             "sub": str(user_id),
             "exp": now + timedelta(days=30),
             "iat": now,
-            "jti": base64url_encode(str(user_id).encode()).decode(),
+            "jti": str(uuid.uuid4()),
         }
         return jwt.encode(
             payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
@@ -53,7 +49,9 @@ class TokenService:
                 detail="Invalid token",
             ) from exc
 
-    async def create_refresh_token_record(self, user_id: uuid.UUID, jti: str, expires_at: datetime) -> RefreshToken:
+    async def create_refresh_token_record(
+        self, user_id: uuid.UUID, jti: str, expires_at: datetime
+    ) -> RefreshToken:
         token = RefreshToken(
             user_id=user_id,
             token_jti=jti,

@@ -9,7 +9,24 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.main import app
+from app.modules.admin.models import (
+    activity_log as activity_log_model,  # noqa: F401
+)
+from app.modules.admin.models import (
+    admin_settings as admin_settings_model,  # noqa: F401
+)
+from app.modules.admin.models import (
+    audit_log as audit_log_model,  # noqa: F401
+)
+from app.modules.admin.models import (
+    banner as banner_model,  # noqa: F401
+)
+from app.modules.admin.models import coupon as coupon_model  # noqa: F401
+from app.modules.auth.models import (
+    email_verification as email_verification_model,  # noqa: F401
+)
 from app.modules.auth.models import user as user_model  # noqa: F401
+from app.modules.cart.models import cart as cart_model  # noqa: F401
 from app.modules.customer.models import (
     address as address_model,  # noqa: F401
 )
@@ -34,6 +51,7 @@ from app.modules.order.models import (
 from app.modules.product.models import (
     product_variant,  # noqa: F401
 )
+from app.modules.wishlist.models import wishlist as wishlist_model  # noqa: F401
 from app.shared.database.base import Base
 from app.shared.database.session import get_db as original_get_db
 

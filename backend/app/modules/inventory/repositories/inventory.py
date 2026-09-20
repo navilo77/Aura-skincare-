@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.modules.inventory.models import Inventory
 from app.modules.inventory.repositories.base import BaseRepository
@@ -13,7 +14,9 @@ class InventoryRepository(BaseRepository):
 
     async def get_by_product(self, product_id: uuid.UUID) -> Inventory | None:
         result = await self.session.execute(
-            select(Inventory).where(Inventory.product_id == product_id)
+            select(Inventory)
+            .where(Inventory.product_id == product_id)
+            .options(selectinload(Inventory.warehouse))
         )
         return result.scalar_one_or_none()
 
