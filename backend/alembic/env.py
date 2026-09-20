@@ -1,19 +1,32 @@
+import asyncio
 import os
 import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
 from logging.config import fileConfig
+from pathlib import Path
 
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+import app.modules.analytics.models  # noqa: F401
 import app.modules.auth.models  # noqa: F401
+import app.modules.customer.models  # noqa: F401
+import app.modules.inventory.models  # noqa: F401
+import app.modules.notification.models  # noqa: F401
 import app.modules.order.models  # noqa: F401
 import app.modules.product.models  # noqa: F401
 from alembic import context
 from app.shared.database.base import Base
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+env_path = Path(__file__).resolve().parent.parent / ".env"
+if env_path.exists():
+    with open(env_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, value = line.partition("=")
+                os.environ.setdefault(key.strip(), value.strip())
 
 config = context.config
 
@@ -62,6 +75,4 @@ async def run_migrations_online() -> None:
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    import asyncio
-
     asyncio.run(run_migrations_online())

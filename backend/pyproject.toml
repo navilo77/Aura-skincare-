@@ -45,4 +45,5 @@ select = ["E", "F", "I", "UP"]
 
 [tool.alembic]
 script_location = "alembic"
-sqlalchemy.url = "postgresql+asyncpg://postgres:[YOUR-PASSWORD]@db.[PROJECT-ID].supabase.co:6543/postgres"
+# sqlalchemy.url is loaded from the DATABASE_URL environment variable by alembic/env.py
+# Do not hardcode database URLs here.

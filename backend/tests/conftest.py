@@ -1,5 +1,8 @@
 import asyncio
+import os
 import sys
+
+os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
