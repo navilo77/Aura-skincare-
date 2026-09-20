@@ -1,6 +1,6 @@
 import uuid
-
 from datetime import UTC, datetime
+from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,8 +9,6 @@ from app.modules.auth.repositories.user import UserRepository
 from app.modules.auth.services.token import TokenService
 from app.shared.security.jwt import decode_token
 from app.shared.security.password import hash_password, verify_password
-from typing import Any
-
 
 
 class AuthService:
@@ -52,11 +50,11 @@ class AuthService:
         exp_val = payload.get("exp")
         if exp_val is None:
             raise ValueError("Invalid refresh token")
-        exp = datetime.fromtimestamp(exp_val, tz=UTC)
+        exp = datetime.fromtimestamp(exp_val, tz=UTC).replace(tzinfo=None)
 
         await self.token_service.create_refresh_token_record(user.id, str(jti), exp)
 
-        user.last_login_at = datetime.now(UTC)
+        user.last_login_at = datetime.now(UTC).replace(tzinfo=None)
         await self.repository.session.flush()
 
         return user, access_token, refresh_token
@@ -78,7 +76,7 @@ class AuthService:
         if (
             not token_record
             or token_record.is_revoked
-            or token_record.expires_at < datetime.now(UTC)
+            or token_record.expires_at < datetime.now(UTC).replace(tzinfo=None)
         ):
             raise ValueError("Invalid or expired refresh token")
 
@@ -92,15 +90,15 @@ class AuthService:
         new_payload = decode_token(new_refresh)
         if new_payload is None:
             raise ValueError("Invalid refresh token")
-        if new_payload is None:
-            raise ValueError("Invalid refresh token")
         new_jti = new_payload.get("jti")
         new_exp_val = new_payload.get("exp")
-        if new_exp_val is None:
+        if new_jti is None or new_exp_val is None:
             raise ValueError("Invalid refresh token")
-        new_exp = datetime.fromtimestamp(new_exp_val, tz=UTC)
+        new_exp = datetime.fromtimestamp(new_exp_val, tz=UTC).replace(tzinfo=None)
 
-        await self.token_service.create_refresh_token_record(user.id, str(new_jti), new_exp)
+        await self.token_service.create_refresh_token_record(
+            user.id, str(new_jti), new_exp
+        )
         await self.token_service.revoke_refresh_token(jti)
 
         return new_access, new_refresh

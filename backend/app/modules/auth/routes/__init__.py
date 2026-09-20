@@ -1,3 +1,1 @@
-from app.modules.auth.routes.role import router as role_router
-
-__all__ = ["role_router"]
+from app.modules.auth.routes.email_verification import router as email_verification_router

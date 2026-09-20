@@ -3,6 +3,9 @@ name = "aura-backend"
 version = "0.1.0"
 description = "Aura Skincare backend"
 requires-python = ">=3.12"
+dependencies = [
+    "langgraph>=0.2.0",
+]
 
 [dependency-groups]
 dev = [

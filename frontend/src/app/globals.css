@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', sans-serif;
+    --font-playfair: 'Playfair Display', serif;
+    --background: #FCFAF7;
+    --foreground: #222222;
+    --surface: #F8F5F1;
+    --accent: #C8A96A;
+    --border: #EAE5DF;
+    --secondary-text: #6F6F6F;
+  }
+
+  .dark {
+    --background: #0F0F0F;
+    --foreground: #F5F5F5;
+    --surface: #1A1A1A;
+    --accent: #C8A96A;
+    --border: #2A2A2A;
+    --secondary-text: #A0A0A0;
+  }
+
+  body {
+    font-family: var(--font-inter), sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-playfair), serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-accent text-white font-medium rounded-button transition-all duration-200 hover:bg-accent-dark disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-border bg-background text-primary font-medium rounded-button transition-all duration-200 hover:bg-surface disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-background border border-border rounded-input text-primary placeholder-secondary-text transition-all duration-200 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent;
+  }
+
+  .card {
+    @apply bg-background border border-border rounded-card p-6 transition-all duration-200;
+  }
+
+  .section-title {
+    @apply font-serif text-3xl md:text-4xl font-semibold tracking-tight;
+  }
+}
