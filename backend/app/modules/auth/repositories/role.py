@@ -23,7 +23,9 @@ class PermissionRepository(BaseRepository):
         )
         return result.scalar_one_or_none() is not None
 
-    async def get_list(self, skip: int = 0, limit: int = 20) -> tuple[list[Permission], int]:
+    async def get_list(
+        self, skip: int = 0, limit: int = 20
+    ) -> tuple[list[Permission], int]:
         query = select(Permission).order_by(Permission.name)
         paginated, total = await self._apply_pagination(query, skip, limit)
         result = await self.session.execute(paginated)
@@ -35,15 +37,11 @@ class RoleRepository(BaseRepository):
         super().__init__(session, Role)
 
     async def get_by_name(self, name: str) -> Role | None:
-        result = await self.session.execute(
-            select(Role).where(Role.name == name)
-        )
+        result = await self.session.execute(select(Role).where(Role.name == name))
         return result.scalar_one_or_none()
 
     async def exists_by_name(self, name: str) -> bool:
-        result = await self.session.execute(
-            select(Role).where(Role.name == name)
-        )
+        result = await self.session.execute(select(Role).where(Role.name == name))
         return result.scalar_one_or_none() is not None
 
     async def get_list(self, skip: int = 0, limit: int = 20) -> tuple[list[Role], int]:

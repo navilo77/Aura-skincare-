@@ -9,8 +9,8 @@ dist/
 build/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 wheels/
@@ -87,3 +87,17 @@ graphify-out/
 
 # Docker
 *.dockerignore
+
+# Aura Security
+backend/.env
+backend/.venv
+certs/
+*.pem
+*.key
+__pycache__/
+*.pyc
+.kilo/node_modules/
+staged_files.txt
+pycache_warning.txt
+test_checkout.json
+frontend/public/skincare_*.jpg

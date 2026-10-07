@@ -9,9 +9,7 @@ from pathlib import Path
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 
 
-def run_command(
-    command: list[str], check: bool = True
-) -> subprocess.CompletedProcess:
+def run_command(command: list[str], check: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(
         command, cwd=BACKEND_DIR, capture_output=True, text=True, check=check
     )

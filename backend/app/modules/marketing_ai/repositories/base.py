@@ -52,6 +52,7 @@ class BaseRepository:
 
     async def delete(self, entity_id: uuid.UUID) -> bool:
         from sqlalchemy import delete
+
         result = await self.session.execute(
             delete(self.model).where(self.model.id == entity_id)
         )

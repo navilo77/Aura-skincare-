@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import uuid
-
 from decimal import Decimal
-
-from sqlalchemy import ForeignKey, Integer, Numeric, String, UUID
 from typing import TYPE_CHECKING
+
+from sqlalchemy import UUID, ForeignKey, Integer, Numeric, String
 
 if TYPE_CHECKING:
     from app.modules.order.models import Order
     from app.modules.product.models import Product
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.order.models import Order
@@ -31,10 +30,16 @@ class OrderItem(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "order_items"
 
     order_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("orders.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("orders.id"),
+        nullable=False,
+        index=True,
     )
     product_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("products.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("products.id"),
+        nullable=False,
+        index=True,
     )
     quantity: Mapped[int] = mapped_column(Integer, nullable=False)
     unit_price: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)

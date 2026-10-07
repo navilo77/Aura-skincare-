@@ -65,6 +65,7 @@ class CategoryRepository(BaseRepository):
     async def get_all_with_children(self) -> list[Category]:
         from sqlalchemy import select as sa_select
         from sqlalchemy.orm import selectinload
+
         result = await self.session.execute(
             sa_select(Category).options(selectinload(Category.children))
         )

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
+
 export async function GET(request: NextRequest) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/marketing/history`, {
+  const res = await fetch(`${BACKEND_URL}/api/v1/marketing/history`, {
     headers: { Authorization: request.headers.get('authorization') || '' },
   });
 

@@ -2,18 +2,24 @@ from __future__ import annotations
 
 import uuid
 from decimal import Decimal
-
-from sqlalchemy import Boolean, Enum, ForeignKey, Integer, Numeric, String, UUID
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from app.modules.product.models import Brand, Category, ProductImage, ProductVariant
+from sqlalchemy import UUID, Boolean, Enum, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
-    from app.modules.product.models import Brand, Category, ProductImage, ProductVariant
+    from app.modules.product.models import (
+        Brand,
+        Category,
+        ProductBenefit,
+        ProductImage,
+        ProductIngredient,
+        ProductRoutine,
+        ProductSkinConcern,
+        ProductSkinType,
+        ProductTag,
+        ProductVariant,
+    )
 
 from app.shared.database.base import Base, TimestampMixin, UUIDMixin
 
@@ -22,10 +28,16 @@ class Product(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "products"
 
     brand_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("brands.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("brands.id"),
+        nullable=False,
+        index=True,
     )
     category_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("categories.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("categories.id"),
+        nullable=False,
+        index=True,
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     slug: Mapped[str] = mapped_column(
@@ -68,3 +80,33 @@ class Product(Base, UUIDMixin, TimestampMixin):
     )
     brand: Mapped["Brand"] = relationship("Brand", back_populates="products")
     category: Mapped["Category"] = relationship("Category", back_populates="products")
+    skin_types: Mapped[list["ProductSkinType"]] = relationship(
+        "ProductSkinType",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )
+    skin_concerns: Mapped[list["ProductSkinConcern"]] = relationship(
+        "ProductSkinConcern",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )
+    ingredients: Mapped[list["ProductIngredient"]] = relationship(
+        "ProductIngredient",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )
+    benefits: Mapped[list["ProductBenefit"]] = relationship(
+        "ProductBenefit",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )
+    tags: Mapped[list["ProductTag"]] = relationship(
+        "ProductTag",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )
+    routines: Mapped[list["ProductRoutine"]] = relationship(
+        "ProductRoutine",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )

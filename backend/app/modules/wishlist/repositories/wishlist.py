@@ -13,9 +13,7 @@ class WishlistRepository(BaseRepository):
         super().__init__(session, Wishlist)
 
     async def get_by_user_id(self, user_id: uuid.UUID) -> Wishlist | None:
-        stmt = select(Wishlist).where(
-            Wishlist.user_id == user_id, Wishlist.is_active
-        )
+        stmt = select(Wishlist).where(Wishlist.user_id == user_id, Wishlist.is_active)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 

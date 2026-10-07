@@ -1,9 +1,10 @@
 from typing import Any
 
-
+# pyrefly: ignore [missing-import]
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.dependencies.rbac import Permission, require_permission
 from app.modules.analytics.schemas.analytics import (
     DashboardCreate,
     DashboardRead,
@@ -12,8 +13,8 @@ from app.modules.analytics.schemas.analytics import (
 )
 from app.modules.analytics.services.dashboard import DashboardService
 from app.modules.analytics.services.metric import MetricService
+from app.modules.auth.models.user import User
 from app.shared.database.session import get_db
-from app.modules.analytics.models.analytics import Dashboard, Metric
 
 router = APIRouter(tags=["analytics"])
 
@@ -22,6 +23,7 @@ router = APIRouter(tags=["analytics"])
 async def list_dashboards(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
+    current_user: User = Depends(require_permission(Permission.ANALYTICS_READ)),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = DashboardService(db)
@@ -33,7 +35,9 @@ async def list_dashboards(
     "/dashboards", response_model=DashboardRead, status_code=status.HTTP_201_CREATED
 )
 async def create_dashboard(
-    payload: DashboardCreate, db: AsyncSession = Depends(get_db)
+    payload: DashboardCreate,
+    current_user: User = Depends(require_permission(Permission.ANALYTICS_READ)),
+    db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = DashboardService(db)
     dashboard = await service.create(
@@ -50,6 +54,7 @@ async def list_metrics(
     name: str | None = Query(None),
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
+    current_user: User = Depends(require_permission(Permission.ANALYTICS_READ)),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = MetricService(db)
@@ -61,7 +66,11 @@ async def list_metrics(
 
 
 @router.post("/metrics", response_model=MetricRead, status_code=status.HTTP_201_CREATED)
-async def create_metric(payload: MetricCreate, db: AsyncSession = Depends(get_db)) -> Any:
+async def create_metric(
+    payload: MetricCreate,
+    current_user: User = Depends(require_permission(Permission.ANALYTICS_READ)),
+    db: AsyncSession = Depends(get_db),
+) -> Any:
     service = MetricService(db)
     metric = await service.create(
         metric_name=payload.metric_name,

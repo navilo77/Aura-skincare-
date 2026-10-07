@@ -3,6 +3,7 @@ import uuid
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.modules.product.schemas.product_search_filter import ProductSearchFilter
 from app.modules.product.services.brand import BrandService
 from app.modules.product.services.category import CategoryService
 from app.modules.product.services.product import ProductService
@@ -325,16 +326,24 @@ async def test_product_service_pagination_and_search(db_session: AsyncSession):
             currency="USD",
         )
 
-    products, total = await product_service.get_list(skip=0, limit=2)
+    products, total = await product_service.get_list(
+        filters=ProductSearchFilter(page=1, limit=2)
+    )
     assert len(products) == 2
     assert total == 5
 
-    products, total = await product_service.get_list(search="Product 1")
+    products, total = await product_service.get_list(
+        filters=ProductSearchFilter(search="Product 1")
+    )
     assert total == 1
     assert products[0].name == "Product 1"
 
-    products, total = await product_service.get_list(brand_id=brand.id)
+    products, total = await product_service.get_list(
+        filters=ProductSearchFilter(brand_slug=brand.slug)
+    )
     assert total == 5
 
-    products, total = await product_service.get_list(category_id=category.id)
+    products, total = await product_service.get_list(
+        filters=ProductSearchFilter(category_slug=category.slug)
+    )
     assert total == 5

@@ -11,7 +11,6 @@ from app.modules.inventory.schemas.inventory import (
 )
 from app.modules.inventory.services.inventory import InventoryService
 from app.shared.database.session import get_db
-from app.modules.inventory.models.inventory import Inventory
 
 router = APIRouter(tags=["inventory"])
 

@@ -1,11 +1,10 @@
 import uuid
+from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.analytics.models import Dashboard
 from app.modules.analytics.repositories.dashboard import DashboardRepository
-from typing import Any
-
 
 
 class DashboardService:

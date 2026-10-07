@@ -20,9 +20,7 @@ class BaseRepository:
         field = getattr(self.model, field_name, None)
         if field is None:
             return None
-        result = await self.session.execute(
-            select(self.model).where(field == value)
-        )
+        result = await self.session.execute(select(self.model).where(field == value))
         return result.scalar_one_or_none()
 
     async def exists_by_field(self, field_name: str, value: Any) -> bool:
@@ -38,9 +36,7 @@ class BaseRepository:
         field = getattr(self.model, field_name, None)
         if field is None:
             return []
-        result = await self.session.execute(
-            select(self.model).where(field == value)
-        )
+        result = await self.session.execute(select(self.model).where(field == value))
         return list(result.scalars().all())
 
     async def get_list_by_filters(self, filters: dict[str, Any]) -> list[Any]:

@@ -10,11 +10,70 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - n8n-network
+
+  sandbox-api:
+    image: n8nio/n8n-sandbox-service-api:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - SANDBOX_API_KEYS=gJfMktswaSiD4G2cOp1Louz0l57UHVFC
+      - SANDBOX_RUNNER_URL=https://sandbox-runner:3000
+      - SANDBOX_API_RUNNER_REGISTRATION_TOKEN=gJfMktswaSiD4G2cOp1Louz0l57UHVFC
+      - SANDBOX_API_GRPC_TLS_CERT_FILE=/certs/client/cert.pem
+      - SANDBOX_API_GRPC_TLS_KEY_FILE=/certs/client/key.pem
+      - SANDBOX_API_GRPC_TLS_CLIENT_CA_FILE=/certs/ca.crt
+      - SANDBOX_API_RUNNER_CONTROL_GRPC_TLS_CA_FILE=/certs/ca.crt
+      - SANDBOX_API_RUNNER_CONTROL_GRPC_TLS_CERT_FILE=/certs/client/cert.pem
+      - SANDBOX_API_RUNNER_CONTROL_GRPC_TLS_KEY_FILE=/certs/client/key.pem
+      - NODE_ENV=production
+    depends_on:
+      - sandbox-runner
+    networks:
+      - n8n-network
+    volumes:
+      - ./certs:/certs:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  sandbox-runner:
+    image: n8nio/n8n-sandbox-service-runner-dind:latest
+    environment:
+      - SANDBOX_API_KEY=gJfMktswaSiD4G2cOp1Louz0l57UHVFC
+      - SANDBOX_RUNNER_API_KEYS=gJfMktswaSiD4G2cOp1Louz0l57UHVFC
+      - SANDBOX_RUNNER_DOCKER_SANDBOX_IMAGE=n8nio/n8n-sandbox-service-runner-dind:latest
+      - SANDBOX_RUNNER_REGISTRATION_GRPC_CA_FILE=/certs/ca.crt
+      - SANDBOX_RUNNER_REGISTRATION_GRPC_CERT_FILE=/certs/client/cert.pem
+      - SANDBOX_RUNNER_REGISTRATION_GRPC_KEY_FILE=/certs/client/key.pem
+      - SANDBOX_RUNNER_REGISTRATION_GRPC_SERVER_NAME=sandbox-api
+      - SANDBOX_RUNNER_API_GRPC_ADDR=sandbox-api:9090
+      - SANDBOX_RUNNER_REGISTRATION_TOKEN=gJfMktswaSiD4G2cOp1Louz0l57UHVFC
+      - SANDBOX_RUNNER_HTTP_BASE_URL=https://sandbox-runner:3000
+      - SANDBOX_RUNNER_CONTROL_GRPC_TLS_CERT_FILE=/certs/client/cert.pem
+      - SANDBOX_RUNNER_CONTROL_GRPC_TLS_KEY_FILE=/certs/client/key.pem
+      - SANDBOX_RUNNER_CONTROL_GRPC_TLS_CLIENT_CA_FILE=/certs/ca.crt
+      - NODE_ENV=production
+    networks:
+      - n8n-network
+    volumes:
+      - ./certs:/certs
+    privileged: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
     ports:
       - "8000:8000"
     environment:
@@ -37,11 +96,14 @@ services:
       GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
     volumes:
       - ./backend:/app
+      - /app/.venv
     depends_on:
       redis:
         condition: service_healthy
+    networks:
+      - n8n-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -57,9 +119,17 @@ services:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
       - WEBHOOK_URL=http://localhost:5678/
+      - N8N_SANDBOX_SERVICE_URL=http://sandbox-api:8080
+      - N8N_SANDBOX_SERVICE_API_KEY=gJfMktswaSiD4G2cOp1Louz0l57UHVFC
     volumes:
       - n8n_data:/home/node/.n8n
+    networks:
+      - n8n-network
 
 volumes:
   redis_data:
   n8n_data:
+
+networks:
+  n8n-network:
+    driver: bridge

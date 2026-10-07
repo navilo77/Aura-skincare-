@@ -39,9 +39,7 @@ async def get_cart(
     )
 
 
-@router.post(
-    "/items", response_model=CartItemRead, status_code=status.HTTP_201_CREATED
-)
+@router.post("/items", response_model=CartItemRead, status_code=status.HTTP_201_CREATED)
 async def add_cart_item(
     payload: CartItemCreate,
     current_user: User = Depends(get_current_user),

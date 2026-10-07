@@ -8,29 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  currency: string;
-  thumbnail_url?: string;
-  sku?: string;
-  status?: string;
-  is_active?: boolean;
-  is_featured?: boolean;
-  brand_id?: string;
-  category_id?: string;
-}
+import { Product } from "@/lib/services/product.service";
 
 type SortOption = 'newest' | 'price_asc' | 'price_desc' | 'best_selling';
 type StatusFilter = 'all' | 'active' | 'inactive';
 
+import { useProducts } from '@/lib/hooks/useProducts';
+import { useCartStore } from '@/lib/store/useCartStore';
+import { cartService } from '@/lib/services/cart.service';
+
 const PRODUCTS_PER_PAGE = 8;
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [displayCount, setDisplayCount] = useState(PRODUCTS_PER_PAGE);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
@@ -41,39 +30,25 @@ export default function ProductsPage() {
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-   const fetchProducts = async () => {
-     try {
-       setLoading(true);
-       const params = new URLSearchParams();
-       if (search) params.set('search', search);
-       if (statusFilter !== 'all') params.set('status', statusFilter);
-       if (priceRange.min) params.set('min_price', priceRange.min);
-       if (priceRange.max) params.set('max_price', priceRange.max);
-       if (sortBy === 'price_asc') {
-         params.set('sort_by', 'price');
-         params.set('sort_order', 'asc');
-       } else if (sortBy === 'price_desc') {
-         params.set('sort_by', 'price');
-         params.set('sort_order', 'desc');
-       } else if (sortBy === 'best_selling') {
-         params.set('sort_by', 'is_featured');
-         params.set('sort_order', 'desc');
-       }
+  const queryParams = useMemo(() => {
+    const params: Record<string, any> = {};
+    if (search) params.search = search;
+    if (statusFilter !== 'all') params.is_active = statusFilter === 'active';
+    if (sortBy === 'price_asc') {
+      params.sort_by = 'price';
+      params.sort_order = 'asc';
+    } else if (sortBy === 'price_desc') {
+      params.sort_by = 'price';
+      params.sort_order = 'desc';
+    } else if (sortBy === 'best_selling') {
+      params.sort_by = 'is_featured';
+      params.sort_order = 'desc';
+    }
+    return params;
+  }, [search, statusFilter, sortBy]);
 
-       const res = await fetch(`/api/products?${params.toString()}`);
-       if (!res.ok) throw new Error('Failed to fetch products');
-       const data = await res.json();
-       setProducts(Array.isArray(data) ? data : []);
-     } catch (err) {
-       setError(err instanceof Error ? err.message : 'Something went wrong');
-     } finally {
-       setLoading(false);
-     }
-   };
-
-   useEffect(() => {
-     fetchProducts();
-   }, [search, statusFilter, priceRange, sortBy]);
+  const { data, isLoading: loading, error, refetch } = useProducts(queryParams);
+  const products = data || [];
 
   const uniqueCategories = useMemo(() => {
     return Array.from(new Set(products.map((p) => p.category_id).filter((id): id is string => id !== undefined)));
@@ -81,33 +56,37 @@ export default function ProductsPage() {
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
-
     if (selectedCategories.length > 0) {
       result = result.filter((p) => p.category_id && selectedCategories.includes(p.category_id));
     }
-
-    if (sortBy === 'price_asc') {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortBy === 'price_desc') {
-      result.sort((a, b) => b.price - a.price);
-    } else if (sortBy === 'best_selling') {
-      result.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+    
+    // Client side price filtering
+    if (priceRange.min) {
+      result = result.filter(p => (Number(p.price) || 0) >= parseFloat(priceRange.min));
+    }
+    if (priceRange.max) {
+      result = result.filter(p => (Number(p.price) || 0) <= parseFloat(priceRange.max));
     }
 
     return result;
-  }, [products, selectedCategories, sortBy]);
+  }, [products, selectedCategories, priceRange]);
 
   const visibleProducts = filteredProducts.slice(0, displayCount);
   const hasMore = filteredProducts.length > displayCount;
 
-  const addToCart = async (productId: string) => {
+  const cartStore = useCartStore();
+
+  const addToCart = async (productId: string, product: Product) => {
     setAddingToCart(productId);
     try {
-      await fetch('/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId, quantity: 1 }),
+      const addedItem = await cartService.addItem(productId, 1);
+      // In case we don't get rich data from backend, fallback to product data
+      cartStore.addItem({
+        ...addedItem,
+        product_name: product.name,
+        thumbnail_url: product.thumbnail_url,
       });
+      cartStore.setDrawerOpen(true);
     } catch {
       // silent fail for demo
     } finally {
@@ -166,7 +145,7 @@ export default function ProductsPage() {
             }
           />
         ))}
-        <span className="text-xs text-secondary-text ml-1">{rating.toFixed(1)}</span>
+        <span className="text-xs text-secondary-text ml-1">{(Number(rating) || 0).toFixed(1)}</span>
       </div>
     );
   };
@@ -184,10 +163,11 @@ export default function ProductsPage() {
   );
 
   const ProductCard = ({ product }: { product: Product }) => {
+    const numericPrice = Number(product.price) || 0;
     const rating = (product.id.charCodeAt(0) % 30 + 20) / 10;
     const hasDiscount = product.id.charCodeAt(1) % 3 === 0;
     const discountPercent = hasDiscount ? 15 + (product.id.charCodeAt(2) % 25) : 0;
-    const originalPrice = hasDiscount ? product.price / (1 - discountPercent / 100) : product.price;
+    const originalPrice = hasDiscount ? numericPrice / (1 - discountPercent / 100) : numericPrice;
 
     const badges = [];
     if (product.is_featured) badges.push({ label: 'Best Seller', variant: 'best' as const });
@@ -197,7 +177,7 @@ export default function ProductsPage() {
     if (product.status === 'limited' || product.status === 'low_stock')
       badges.push({ label: 'Limited', variant: 'limited' as const });
 
-    const finalPrice = hasDiscount ? product.price : originalPrice;
+    const finalPrice = hasDiscount ? numericPrice : originalPrice;
     const displayOriginal = hasDiscount ? originalPrice : null;
 
     return (
@@ -251,7 +231,7 @@ export default function ProductsPage() {
                 className="w-full rounded-button shadow-premium"
                 onClick={(e) => {
                   e.preventDefault();
-                  addToCart(product.id);
+                  addToCart(product.id, product);
                 }}
                 loading={addingToCart === product.id}
               >
@@ -270,11 +250,11 @@ export default function ProductsPage() {
             <div className="mb-2">{renderStars(rating)}</div>
             <div className="flex items-center gap-2">
               <span className="text-base font-semibold text-primary">
-                {product.currency || '$'} {finalPrice.toFixed(2)}
+                {product.currency || '$'} {(Number(finalPrice) || 0).toFixed(2)}
               </span>
               {displayOriginal && (
                 <span className="text-sm text-secondary-text line-through">
-                  {product.currency || '$'} {displayOriginal.toFixed(2)}
+                  {product.currency || '$'} {(Number(displayOriginal) || 0).toFixed(2)}
                 </span>
               )}
             </div>
@@ -538,8 +518,8 @@ export default function ProductsPage() {
                  animate={{ opacity: 1, scale: 1 }}
                  className="text-center py-20 bg-surface rounded-card shadow-soft border border-border"
                >
-                 <p className="text-secondary-text text-lg mb-4">{error}</p>
-                 <Button variant="primary" onClick={fetchProducts}>
+                 <p className="text-secondary-text text-lg mb-4">{error.message || 'An error occurred'}</p>
+                 <Button variant="primary" onClick={() => refetch()}>
                    Try Again
                  </Button>
                </motion.div>

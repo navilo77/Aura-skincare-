@@ -85,8 +85,8 @@ class OrderItemService:
         if unit_price is not None:
             item.unit_price = unit_price
 
-        item.total_price = (
-            Decimal(str(float(item.unit_price))) * Decimal(str(item.quantity))
+        item.total_price = Decimal(str(float(item.unit_price))) * Decimal(
+            str(item.quantity)
         )
         updated_item = await self.repository.update(item)
         await self._recalculate_order_total(uuid.UUID(str(item.order_id)))

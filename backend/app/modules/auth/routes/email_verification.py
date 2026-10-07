@@ -18,7 +18,9 @@ async def verify_email(
 ) -> dict[str, str]:
     repository = EmailVerificationRepository(db)
     verification = await repository.get_by_token(token)
-    if not verification or verification.expires_at < datetime.now(UTC).replace(tzinfo=None):
+    if not verification or verification.expires_at < datetime.now(UTC).replace(
+        tzinfo=None
+    ):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid or expired verification token",
@@ -48,9 +50,7 @@ async def resend_verification(
     if user.is_verified:
         return {"message": "Email already verified"}
 
-    token = service.token_service.create_access_token(
-        user.id, user.role
-    )
+    token = service.token_service.create_access_token(user.id, user.role)
     expires_at = datetime.now(UTC).replace(tzinfo=None) + timedelta(hours=24)
 
     verification = EmailVerification(

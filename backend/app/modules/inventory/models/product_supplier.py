@@ -2,16 +2,16 @@ from __future__ import annotations
 
 import uuid
 from decimal import Decimal
-
-from sqlalchemy import Boolean, ForeignKey, Numeric, Numeric, UUID
 from typing import TYPE_CHECKING
+
+from sqlalchemy import UUID, Boolean, ForeignKey, Numeric
 
 if TYPE_CHECKING:
     from app.modules.inventory.models import Supplier
     from app.modules.product.models import Product
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.inventory.models import Supplier
@@ -41,9 +41,7 @@ class ProductSupplier(Base, UUIDMixin, TimestampMixin):
         nullable=False,
         index=True,
     )
-    cost_price: Mapped[Decimal] = mapped_column(
-        Numeric(10, 2), nullable=False
-    )
+    cost_price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     is_preferred: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     product: Mapped["Product"] = relationship("Product")

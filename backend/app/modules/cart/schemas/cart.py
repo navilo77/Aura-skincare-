@@ -30,6 +30,8 @@ class CartItemRead(CartItemBase):
     cart_id: uuid.UUID
     created_at: datetime
     updated_at: datetime
+    product_name: str | None = None
+    thumbnail_url: str | None = None
 
 
 class CartBase(BaseModel):

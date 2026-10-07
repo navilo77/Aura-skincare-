@@ -1,6 +1,8 @@
 class InventoryValidator:
     @staticmethod
-    def validate_reservation(quantity_on_hand: int, quantity_reserved: int, requested_quantity: int) -> None:
+    def validate_reservation(
+        quantity_on_hand: int, quantity_reserved: int, requested_quantity: int
+    ) -> None:
         available = quantity_on_hand - quantity_reserved
         if requested_quantity > available:
             raise ValueError("Insufficient available inventory for reservation")

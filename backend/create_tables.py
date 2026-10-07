@@ -14,7 +14,9 @@ if sys.platform == "win32":
 
 def import_all_model_modules() -> None:
     base_package = "app.modules"
-    for module_info in pkgutil.walk_packages([base_package.replace(".", "/")], prefix=f"{base_package}."):
+    for module_info in pkgutil.walk_packages(
+        [base_package.replace(".", "/")], prefix=f"{base_package}."
+    ):
         if ".models." in module_info.name or module_info.name.endswith(".models"):
             try:
                 importlib.import_module(module_info.name)

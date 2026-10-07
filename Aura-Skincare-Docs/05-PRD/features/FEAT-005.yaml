@@ -1,0 +1,172 @@
+metadata:
+  id: FEAT-005
+  title: Supabase Auth & Storage Integration
+  version: 1.0
+  status: Draft
+  priority: High
+  owner: Aura Skincare
+  category: Infrastructure
+  created: 2026-09-23
+  updated: 2026-09-23
+
+feature:
+  id: FEAT-005
+  type: Infrastructure Enhancement
+  priority: High
+  description: |
+    Integrate Supabase Auth (GoTrue) for authentication management and Supabase Storage (S3-compatible) for file uploads.
+    This replaces the current custom JWT implementation with Supabase's managed auth service and provides
+    scalable file storage for product images, customer avatars, and AI-generated content.
+
+  problem_statement: |
+    Current implementation uses custom JWT authentication with local user management in PostgreSQL.
+    File storage is limited to URL references (no actual upload capability). This creates:
+    - Maintenance burden for auth logic (registration, login, MFA, password reset, email verification)
+    - No built-in OAuth providers (Google, GitHub, Apple)
+    - No file upload handling - images must be hosted externally
+    - No CDN integration for global asset delivery
+    - Manual token refresh and session management
+
+  objectives:
+    - Migrate authentication to Supabase Auth (GoTrue) for managed identity
+    - Enable Supabase Storage for product images, avatars, and AI-generated content
+    - Maintain backward compatibility during migration
+    - Leverage Supabase's built-in OAuth, MFA, and email templates
+    - Reduce custom auth code by ~70%
+    - Enable signed URLs for secure private file access
+
+  scope:
+    in_scope:
+      - Supabase Auth integration (signup, login, OAuth, MFA, password reset, email verification)
+      - Supabase Storage buckets: product-images, customer-avatars, ai-generated, marketing-assets
+      - Signed URL generation for private assets
+      - Migration strategy for existing users
+      - Row Level Security (RLS) policies for data access
+      - Frontend SDK integration (supabase-js)
+      - Backend admin client for server-side operations
+
+    out_of_scope:
+      - Supabase Realtime subscriptions
+      - Supabase Edge Functions (keep FastAPI backend)
+      - Supabase Database branching (keep Alembic migrations)
+      - Full user data migration in single deployment (phased approach)
+
+  actors:
+    primary:
+      - Customer (end user)
+      - Admin (dashboard user)
+    secondary:
+      - Frontend Application (Next.js)
+      - Backend API (FastAPI)
+      - AI Agents (service-to-service)
+      - Marketing Team (asset management)
+
+  preconditions:
+    - Supabase Project created and configured
+    - DATABASE_URL points to Supabase PostgreSQL (already done)
+    - SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY in environment
+    - Custom domain configured for auth emails (optional but recommended)
+
+  functional_requirements:
+    - FR-001: User registration via Supabase Auth (email/password + OAuth)
+    - FR-002: User login with JWT access/refresh tokens from Supabase
+    - FR-003: Password reset flow via Supabase (email with secure link)
+    - FR-004: Email verification via Supabase (configurable)
+    - FR-005: Multi-Factor Authentication (TOTP + SMS) via Supabase
+    - FR-006: OAuth providers: Google, GitHub, Apple (configurable)
+    - FR-007: File upload to Supabase Storage with signed URLs
+    - FR-008: Product image upload/replace/delete via Storage API
+    - FR-009: Customer avatar upload with automatic resize/optimization
+    - FR-010: AI-generated image storage (skin analysis, recommendations)
+    - FR-011: Marketing asset storage (banners, campaign images)
+    - FR-012: Row Level Security policies for storage buckets
+    - FR-013: Backend service role for admin operations (user management, cleanup)
+    - FR-014: Session management with automatic token refresh
+    - FR-015: User metadata sync between Supabase Auth and local User table
+
+  non_functional_requirements:
+    - NFR-001: Auth latency < 200ms (p95) for token validation
+    - NFR-002: File upload success rate > 99.9%
+    - NFR-003: CDN cache hit ratio > 95% for public assets
+    - NFR-004: Storage encryption at rest (Supabase default)
+    - NFR-005: Signed URL expiry configurable (default 1 hour)
+    - NFR-006: Maximum file size: 50MB per upload
+    - NFR-007: Allowed file types: JPEG, PNG, WebP, AVIF, PDF
+    - NFR-008: GDPR-compliant data deletion (storage + auth)
+    - NFR-009: Audit logging for auth events (login, signup, password change)
+
+  acceptance_criteria:
+    - AC-001: New user can register via email/password and receive verification email
+    - AC-002: Existing user can login and receive valid JWT tokens
+    - AC-003: OAuth login (Google) works end-to-end
+    - AC-004: Password reset email sent and link works
+    - AC-005: MFA can be enabled/disabled by user
+    - AC-006: Product image can be uploaded via API and served via CDN
+    - AC-007: Customer avatar upload works and displays in profile
+    - AC-008: Signed URLs expire after configured time
+    - AC-009: RLS policies prevent unauthorized file access
+    - AC-010: Backend can list/manage users via Admin API
+    - AC-011: Migration script converts existing users to Supabase Auth
+    - AC-012: Zero downtime during phased migration
+
+  dependencies:
+    - Supabase Project (existing)
+    - DATABASE_URL configured for Supabase PostgreSQL (existing)
+    - supabase-py >= 2.0 (backend)
+    - @supabase/supabase-js >= 2.0 (frontend)
+    - FEAT-001 (AI Consultation) - for AI-generated image storage
+    - FEAT-003 (Cart Management) - for product images
+    - API-001 (Product Catalog) - image serving
+    - API-003 (Customer Profile) - avatar upload
+
+  risks:
+    - risk: Migration complexity for existing users
+      mitigation: Phased migration with dual-write period, fallback to legacy auth
+    - risk: Token format change (Supabase JWT vs custom JWT)
+      mitigation: Update token validation middleware, maintain compatibility layer
+    - risk: Storage cost at scale
+      mitigation: Lifecycle policies, image optimization, CDN caching
+    - risk: Vendor lock-in
+      mitigation: S3-compatible API, export tools, portable data format
+    - risk: RLS policy misconfiguration
+      mitigation: Comprehensive integration tests, staging validation
+
+  success_metrics:
+    - Auth-related support tickets reduced by 50%
+    - Custom auth code lines reduced by 70%
+    - File upload success rate > 99.9%
+    - Average image load time < 500ms globally
+    - Zero auth-related security incidents
+
+  related_requirements:
+    - REQ-001 (Customer Experience)
+    - REQ-002 (Purchase Flow)
+    - NFR-001 (Performance)
+    - NFR-002 (Security)
+
+  related_api:
+    - API-001 (Product Catalog) - image URLs
+    - API-003 (Customer Profile) - avatar upload
+    - API-007 (Authentication) - Supabase Auth endpoints
+
+  related_documents:
+    - SAD-001 (System Architecture)
+    - SEC-001 (Security Policy)
+    - SEC-002 (Authorization Policy)
+    - API-DOC-001 (API Authentication)
+
+  notes: |
+    Implementation Phases:
+    Phase 1: Supabase Client Setup & Configuration (Week 1)
+    Phase 2: Auth Migration - New Users Only (Week 2)
+    Phase 3: Storage Integration - Product Images (Week 3)
+    Phase 4: Storage Integration - Avatars & AI Content (Week 4)
+    Phase 5: Existing User Migration (Week 5)
+    Phase 6: Legacy Auth Cleanup (Week 6)
+
+    Key Decisions:
+    - Keep FastAPI as primary backend, Supabase as auth/storage provider
+    - Use Supabase JWT directly (no token translation layer)
+    - Service Role key only in backend, never in frontend
+    - RLS policies as primary authorization for storage
+    - Local User table kept for business data, linked via supabase_user_id

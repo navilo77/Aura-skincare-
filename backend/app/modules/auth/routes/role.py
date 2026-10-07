@@ -4,7 +4,6 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.modules.auth.models import Permission, Role
 from app.modules.auth.schemas.role import (
     PermissionCreate,
     PermissionRead,
@@ -75,7 +74,9 @@ async def update_role(
         ) from exc
 
 
-@router.delete("/roles/{role_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
+@router.delete(
+    "/roles/{role_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
 async def delete_role(role_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
     service = RoleService(db)
     try:

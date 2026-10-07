@@ -4,6 +4,8 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.dependencies.auth import get_current_user
+from app.modules.auth.models.user import User
 from app.modules.order.schemas.billing_address import (
     BillingAddressCreateRequest,
     BillingAddressRead,
@@ -11,13 +13,16 @@ from app.modules.order.schemas.billing_address import (
 )
 from app.modules.order.services.billing_address import BillingAddressService
 from app.shared.database.session import get_db
-from app.modules.order.models.billing_address import BillingAddress
 
 router = APIRouter(prefix="/billing-address", tags=["billing-addresses"])
 
 
 @router.get("", response_model=BillingAddressRead)
-async def get_billing_address(order_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+async def get_billing_address(
+    order_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Any:
     service = BillingAddressService(db)
     address = await service.get_billing_address(order_id)
     if not address:
@@ -27,12 +32,11 @@ async def get_billing_address(order_id: uuid.UUID, db: AsyncSession = Depends(ge
     return address
 
 
-@router.post(
-    "", response_model=BillingAddressRead, status_code=status.HTTP_201_CREATED
-)
+@router.post("", response_model=BillingAddressRead, status_code=status.HTTP_201_CREATED)
 async def create_billing_address(
     order_id: uuid.UUID,
     payload: BillingAddressCreateRequest,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = BillingAddressService(db)
@@ -59,6 +63,7 @@ async def create_billing_address(
 async def update_billing_address(
     order_id: uuid.UUID,
     payload: BillingAddressUpdate,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = BillingAddressService(db)
@@ -88,7 +93,9 @@ async def update_billing_address(
 
 @router.delete("", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 async def delete_billing_address(
-    order_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+    order_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = BillingAddressService(db)
     existing = await service.get_billing_address(order_id)

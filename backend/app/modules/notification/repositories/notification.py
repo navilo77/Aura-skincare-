@@ -60,7 +60,9 @@ class NotificationRepository(BaseRepository):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Notification)
 
-    async def get_by_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 20) -> tuple[list[Any], int]:
+    async def get_by_user(
+        self, user_id: uuid.UUID, skip: int = 0, limit: int = 20
+    ) -> tuple[list[Any], int]:
         query = (
             select(Notification)
             .where(Notification.user_id == user_id)
@@ -70,10 +72,34 @@ class NotificationRepository(BaseRepository):
         result = await self.session.execute(paginated)
         return list(result.scalars().all()), total
 
-    async def get_by_status(self, status: str, skip: int = 0, limit: int = 20) -> tuple[list[Any], int]:
+    async def get_by_status(
+        self, status: str, skip: int = 0, limit: int = 20
+    ) -> tuple[list[Any], int]:
         query = (
             select(Notification)
             .where(Notification.status == status)
+            .order_by(Notification.created_at.desc())
+        )
+        paginated, total = await self._apply_pagination(query, skip, limit)
+        result = await self.session.execute(paginated)
+        return list(result.scalars().all()), total
+
+    async def get_list(
+        self,
+        user_id: uuid.UUID | None = None,
+        status: str | None = None,
+        skip: int = 0,
+        limit: int = 20,
+    ) -> tuple[list[Any], int]:
+        filters = []
+        if user_id is not None:
+            filters.append(Notification.user_id == user_id)
+        if status is not None:
+            filters.append(Notification.status == status)
+
+        query = (
+            select(Notification)
+            .where(*filters)
             .order_by(Notification.created_at.desc())
         )
         paginated, total = await self._apply_pagination(query, skip, limit)

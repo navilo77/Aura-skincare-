@@ -24,18 +24,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useProducts } from "@/lib/hooks/useProducts";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  currency: string;
-  thumbnail_url: string | null;
-  sku: string;
-  status: string;
-  is_active: boolean;
-  is_featured: boolean;
-}
+import { Product } from "@/lib/services/product.service";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -194,16 +185,14 @@ function StarRating({ rating }: { rating: number }) {
 function ProductCard({
   product,
   badge,
-  index,
 }: {
   product: Product;
   badge?: string;
-  index: number;
 }) {
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const discount = badge === "Discount" ? Math.floor(Math.random() * 20 + 10) : 0;
+  const discount = badge === "Discount" ? 15 : 0;
 
   return (
     <motion.div
@@ -304,30 +293,10 @@ function TestimonialCard({
 }
 
 export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [subscribed, setSubscribed] = useState(false);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/products");
-      if (!res.ok) throw new Error("Failed to fetch products");
-      const data = await res.json();
-      setProducts(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const { data: productsData, isLoading: loading, error, refetch } = useProducts({ limit: 8, is_featured: true });
+  const products = productsData || [];
 
   const bestSellers = products.filter((p) => p.is_featured).slice(0, 4);
   const newArrivals = products.slice(0, 4);
@@ -447,18 +416,21 @@ export default function Home() {
             variants={staggerContainer}
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
           >
-            {trustBadges.map((badge) => (
-              <motion.div
-                key={badge.label}
-                variants={fadeIn}
-                className="flex flex-col items-center text-center gap-2"
-              >
-                <badge.icon className="w-6 h-6 text-accent" />
-                <span className="text-xs font-medium text-secondary">
-                  {badge.label}
-                </span>
-              </motion.div>
-            ))}
+            {trustBadges.map((badge) => {
+              const Icon = badge.icon;
+              return (
+                <motion.div
+                  key={badge.label}
+                  variants={fadeIn}
+                  className="flex flex-col items-center text-center gap-2"
+                >
+                  <Icon className="w-6 h-6 text-accent" />
+                  <span className="text-xs font-medium text-secondary">
+                    {badge.label}
+                  </span>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
@@ -541,9 +513,9 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-12 bg-surface rounded-card border border-border"
             >
-              <p className="text-secondary-text mb-4">{error}</p>
+              <p className="text-secondary-text mb-4">Failed to load best sellers.</p>
               <button
-                onClick={fetchProducts}
+                onClick={() => refetch()}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-medium rounded-button hover:bg-accent-dark transition-all duration-200 shadow-soft"
               >
                 Try Again
@@ -570,7 +542,6 @@ export default function Home() {
                       ? "Limited"
                       : undefined
                   }
-                  index={index}
                 />
               ))}
             </motion.div>
@@ -634,9 +605,9 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-12 bg-surface rounded-card border border-border"
             >
-              <p className="text-secondary-text mb-4">{error}</p>
+              <p className="text-secondary-text mb-4">Failed to load new arrivals.</p>
               <button
-                onClick={fetchProducts}
+                onClick={() => refetch()}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-medium rounded-button hover:bg-accent-dark transition-all duration-200 shadow-soft"
               >
                 Try Again
@@ -655,7 +626,6 @@ export default function Home() {
                   key={product.id}
                   product={product}
                   badge="New"
-                  index={index}
                 />
               ))}
             </motion.div>

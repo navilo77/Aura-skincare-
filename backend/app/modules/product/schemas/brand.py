@@ -52,4 +52,3 @@ class BrandList(BaseModel):
     slug: str
     logo_url: str | None = None
     is_active: bool
-

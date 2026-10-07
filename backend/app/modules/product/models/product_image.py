@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, UUID
 import uuid
 from typing import TYPE_CHECKING
 
+from sqlalchemy import UUID, Boolean, ForeignKey, Integer, String
+
 if TYPE_CHECKING:
     from app.modules.product.models import Product
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.product.models import Product
@@ -20,7 +21,10 @@ class ProductImage(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "product_images"
 
     product_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("products.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("products.id"),
+        nullable=False,
+        index=True,
     )
     image_url: Mapped[str] = mapped_column(String(512), nullable=False)
     alt_text: Mapped[str | None] = mapped_column(String(255), nullable=True)

@@ -28,7 +28,9 @@ class MarketingCampaignService:
         campaign = MarketingCampaign(**kwargs)
         return await self.repository.create(campaign)
 
-    async def get_list(self, skip: int = 0, limit: int = 20) -> tuple[list[MarketingCampaign], int]:
+    async def get_list(
+        self, skip: int = 0, limit: int = 20
+    ) -> tuple[list[MarketingCampaign], int]:
         return await self.repository.get_list(skip=skip, limit=limit)
 
 
@@ -54,7 +56,9 @@ class MarketingContentService:
         content = MarketingContent(**kwargs)
         return await self.repository.create(content)
 
-    async def get_list(self, skip: int = 0, limit: int = 20) -> tuple[list[MarketingContent], int]:
+    async def get_list(
+        self, skip: int = 0, limit: int = 20
+    ) -> tuple[list[MarketingContent], int]:
         return await self.repository.get_list(skip=skip, limit=limit)
 
 

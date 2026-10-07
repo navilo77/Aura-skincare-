@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -80,7 +81,7 @@ async def test_notification_service_crud(db_session: AsyncSession):
     updated = await service.update_status(
         notification_id=notification.id,
         status="sent",
-        sent_at="2024-01-01T00:00:00",
+        sent_at=datetime(2024, 1, 1, 0, 0, 0),
     )
     assert updated.status == "sent"
-    assert updated.sent_at == "2024-01-01T00:00:00"
+    assert updated.sent_at == datetime(2024, 1, 1, 0, 0, 0)

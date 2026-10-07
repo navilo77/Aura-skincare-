@@ -31,9 +31,7 @@ class InventoryReservationRepository(BaseRepository):
         )
         return result.scalar_one_or_none()
 
-    async def get_active(
-        self, inventory_id: uuid.UUID
-    ) -> list[InventoryReservation]:
+    async def get_active(self, inventory_id: uuid.UUID) -> list[InventoryReservation]:
         result = await self.session.execute(
             select(InventoryReservation).where(
                 InventoryReservation.inventory_id == inventory_id,

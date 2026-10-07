@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime
 from decimal import Decimal
-
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -17,7 +16,6 @@ class ProductVariantBase(BaseModel):
     stock_quantity: int = Field(0, ge=0)
     attributes: dict[str, Any] | None = None
     is_active: bool = True
-
 
 
 class ProductVariantCreateRequest(BaseModel):

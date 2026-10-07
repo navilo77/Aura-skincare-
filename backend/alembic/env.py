@@ -7,6 +7,15 @@ from pathlib import Path
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+print("cwd =", Path.cwd())
+print("ROOT =", ROOT)
+print("sys.path =", sys.path)
+
+import app  # noqa: F401
 import app.modules.admin.models  # noqa: F401
 import app.modules.ai.models  # noqa: F401
 import app.modules.analytics.models  # noqa: F401
@@ -18,12 +27,11 @@ import app.modules.marketing_ai.models  # noqa: F401
 import app.modules.notification.models  # noqa: F401
 import app.modules.order.models  # noqa: F401
 import app.modules.order_automation.models  # noqa: F401
+import app.modules.payment.models  # noqa: F401
 import app.modules.product.models  # noqa: F401
 import app.modules.wishlist.models  # noqa: F401
 from alembic import context
 from app.shared.database.base import Base
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 env_path = Path(__file__).resolve().parent.parent / ".env"
 if env_path.exists():

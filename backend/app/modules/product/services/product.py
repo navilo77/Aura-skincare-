@@ -7,6 +7,7 @@ from app.modules.product.models import Product
 from app.modules.product.repositories.brand import BrandRepository
 from app.modules.product.repositories.category import CategoryRepository
 from app.modules.product.repositories.product import ProductRepository
+from app.modules.product.schemas.product_search_filter import ProductSearchFilter
 
 
 class ProductService:
@@ -158,35 +159,9 @@ class ProductService:
 
     async def get_list(
         self,
-        skip: int = 0,
-        limit: int = 20,
-        brand_id: uuid.UUID | None = None,
-        category_id: uuid.UUID | None = None,
-        status: str | None = None,
-        product_type: str | None = None,
-        is_active: bool | None = None,
-        is_featured: bool | None = None,
-        min_price: Decimal | None = None,
-        max_price: Decimal | None = None,
-        search: str | None = None,
-        sort_by: str = "created_at",
-        sort_order: str = "desc",
+        filters: ProductSearchFilter | None = None,
     ) -> tuple[list[Product], int]:
-        return await self.repository.get_list(
-            skip=skip,
-            limit=limit,
-            brand_id=brand_id,
-            category_id=category_id,
-            status=status,
-            product_type=product_type,
-            is_active=is_active,
-            is_featured=is_featured,
-            min_price=min_price,
-            max_price=max_price,
-            search=search,
-            sort_by=sort_by,
-            sort_order=sort_order,
-        )
+        return await self.repository.get_list(filters=filters)
 
     async def get_featured(self, skip: int = 0, limit: int = 20) -> list[Product]:
         return await self.repository.get_featured(skip=skip, limit=limit)
@@ -197,9 +172,7 @@ class ProductService:
         skip: int = 0,
         limit: int = 20,
     ) -> list[Product]:
-        return await self.repository.get_by_brand(
-            brand_id, skip=skip, limit=limit
-        )
+        return await self.repository.get_by_brand(brand_id, skip=skip, limit=limit)
 
     async def get_by_category(
         self,

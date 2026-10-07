@@ -1,59 +1,70 @@
 import uuid
+from decimal import Decimal
 from typing import Any
 
-from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.product.schemas.product import (
     ProductCreate,
-    ProductDetail,
     ProductList,
     ProductRead,
     ProductUpdate,
 )
+from app.modules.product.schemas.product_search_filter import ProductSearchFilter
 from app.modules.product.services.product import ProductService
 from app.shared.database.session import get_db
-from app.modules.product.models.product import Product
 
 router = APIRouter(tags=["products"])
 
 
+async def get_search_filters(
+    brand_slug: str | None = Query(None, description="Brand slug"),
+    category_slug: str | None = Query(None, description="Category slug"),
+    skin_type_slug: str | None = Query(None, description="Skin type slug"),
+    concern_slug: str | None = Query(None, description="Skin concern slug"),
+    ingredient_slug: str | None = Query(None, description="Ingredient slug"),
+    benefit_slug: str | None = Query(None, description="Benefit slug"),
+    tag_slug: str | None = Query(None, description="Product tag slug"),
+    routine_slug: str | None = Query(None, description="Routine type slug"),
+    search: str | None = Query(None, description="Search query"),
+    price_min: Decimal | None = Query(None, ge=0, description="Minimum price"),
+    price_max: Decimal | None = Query(None, ge=0, description="Maximum price"),
+    rating: float | None = Query(None, ge=0, le=5, description="Minimum rating"),
+    availability: str | None = Query(None, description="Stock availability"),
+    sort: str = Query("created_at", description="Sort field"),
+    sort_order: str | None = Query("desc", description="Sort direction"),
+    page: int | None = Query(1, ge=1, description="Page number"),
+    limit: int | None = Query(20, ge=1, le=100, description="Items per page"),
+) -> ProductSearchFilter:
+    return ProductSearchFilter(
+        brand_slug=brand_slug,
+        category_slug=category_slug,
+        skin_type_slug=skin_type_slug,
+        concern_slug=concern_slug,
+        ingredient_slug=ingredient_slug,
+        benefit_slug=benefit_slug,
+        tag_slug=tag_slug,
+        routine_slug=routine_slug,
+        search=search,
+        price_min=price_min,
+        price_max=price_max,
+        rating=rating,
+        availability=availability,
+        sort=sort,
+        sort_order=sort_order,
+        page=page,
+        limit=limit,
+    )
+
+
 @router.get("", response_model=list[ProductList])
 async def list_products(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100),
-    brand_id: uuid.UUID | None = Query(None),
-    category_id: uuid.UUID | None = Query(None),
-    status: str | None = Query(None),
-    product_type: str | None = Query(None),
-    is_active: bool | None = Query(None),
-    is_featured: bool | None = Query(None),
-    min_price: Decimal | None = Query(None, ge=0),
-    max_price: Decimal | None = Query(None, ge=0),
-    search: str | None = Query(None),
-    sort_by: str = Query(
-        "created_at", pattern="^(name|slug|price|created_at|updated_at)$"
-    ),
-    sort_order: str = Query("desc", pattern="^(asc|desc)$"),
+    filters: ProductSearchFilter = Depends(get_search_filters),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = ProductService(db)
-    products, _ = await service.get_list(
-        skip=skip,
-        limit=limit,
-        brand_id=brand_id,
-        category_id=category_id,
-        status=status,
-        product_type=product_type,
-        is_active=is_active,
-        is_featured=is_featured,
-        min_price=min_price,
-        max_price=max_price,
-        search=search,
-        sort_by=sort_by,
-        sort_order=sort_order,
-    )
+    products, _ = await service.get_list(filters=filters)
     return products
 
 
@@ -70,7 +81,9 @@ async def get_product(product_id: uuid.UUID, db: AsyncSession = Depends(get_db))
 
 
 @router.post("", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
-async def create_product(payload: ProductCreate, db: AsyncSession = Depends(get_db)) -> Any:
+async def create_product(
+    payload: ProductCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = ProductService(db)
     try:
         product = await service.create(
@@ -134,8 +147,12 @@ async def update_product(
         ) from exc
 
 
-@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
-async def delete_product(product_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+@router.delete(
+    "/{product_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
+async def delete_product(
+    product_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = ProductService(db)
     try:
         await service.delete(product_id)

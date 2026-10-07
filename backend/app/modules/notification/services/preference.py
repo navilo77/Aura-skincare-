@@ -31,7 +31,5 @@ class PreferenceService:
     async def get_by_user(self, user_id: uuid.UUID) -> Any:
         return await self.repository.get_by_user(user_id)
 
-    async def get_by_channel(
-        self, user_id: uuid.UUID, channel: str
-    ) -> Any:
+    async def get_by_channel(self, user_id: uuid.UUID, channel: str) -> Any:
         return await self.repository.get_by_user_and_channel(user_id, channel)

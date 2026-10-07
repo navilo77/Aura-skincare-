@@ -2,17 +2,12 @@ from typing import Any
 
 from app.modules.ai.agents.base import BaseAgent
 from app.modules.ai.schemas.ai import ChatRequest, ChatResponse
-from app.modules.ai.services.prompt_manager import PromptManager
 
 
 class RouterAgent(BaseAgent):
     name = "router"
 
-    def __init__(self) -> None:
-        self.prompt_manager = PromptManager()
-
     async def handle(self, request: ChatRequest, **kwargs: Any) -> ChatResponse:
-        self.prompt_manager.get_router_prompt()
         user_message = request.message.strip().lower()
 
         if any(
@@ -36,8 +31,7 @@ class RouterAgent(BaseAgent):
             confidence = 0.8
             reasoning = "User is asking about admin tasks"
         elif any(
-            keyword in user_message
-            for keyword in ["campaign", "marketing", "social"]
+            keyword in user_message for keyword in ["campaign", "marketing", "social"]
         ):
             agent = "marketing"
             confidence = 0.8

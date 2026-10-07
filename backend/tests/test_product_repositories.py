@@ -15,6 +15,7 @@ from app.modules.product.repositories.category import CategoryRepository
 from app.modules.product.repositories.product import ProductRepository
 from app.modules.product.repositories.product_image import ProductImageRepository
 from app.modules.product.repositories.product_variant import ProductVariantRepository
+from app.modules.product.schemas.product_search_filter import ProductSearchFilter
 
 
 @pytest.mark.asyncio
@@ -166,11 +167,15 @@ async def test_product_repository_pagination_and_search(db_session: AsyncSession
         db_session.add(product)
     await db_session.flush()
 
-    products, total = await repo.get_list(skip=0, limit=2)
+    products, total = await repo.get_list(
+        filters=ProductSearchFilter(page=1, limit=2)
+    )
     assert len(products) == 2
     assert total == 5
 
-    products, total = await repo.get_list(search="Product 1")
+    products, total = await repo.get_list(
+        filters=ProductSearchFilter(search="Product 1")
+    )
     assert total == 1
     assert products[0].name == "Product 1"
 

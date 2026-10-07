@@ -10,7 +10,6 @@ from app.modules.inventory.schemas.product_supplier import (
 )
 from app.modules.inventory.services.product_supplier import ProductSupplierService
 from app.shared.database.session import get_db
-from app.modules.inventory.models.product_supplier import ProductSupplier
 
 router = APIRouter(tags=["product-suppliers"])
 
@@ -18,7 +17,9 @@ router = APIRouter(tags=["product-suppliers"])
 @router.get(
     "/products/{product_id}/suppliers", response_model=list[ProductSupplierRead]
 )
-async def list_product_suppliers(product_id: str, db: AsyncSession = Depends(get_db)) -> Any:
+async def list_product_suppliers(
+    product_id: str, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = ProductSupplierService(db)
     links = await service.get_by_product(uuid.UUID(product_id))
     return links

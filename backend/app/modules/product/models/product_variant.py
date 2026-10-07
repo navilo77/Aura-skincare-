@@ -1,29 +1,25 @@
 from __future__ import annotations
 
-from decimal import Decimal
-
 import uuid
-
-from sqlalchemy import JSON, Boolean, ForeignKey, Integer, Numeric, String, UUID
+from decimal import Decimal
 from typing import TYPE_CHECKING
+
+from sqlalchemy import JSON, UUID, Boolean, ForeignKey, Integer, Numeric, String
 
 if TYPE_CHECKING:
     from app.modules.product.models import Product
+from typing import TYPE_CHECKING
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app.modules.product.models import Product
+
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from app.modules.product.models import Product
 
-from typing import Any
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from app.modules.product.models import Product
-
-from typing import Any
 
 from app.shared.database.base import Base, TimestampMixin, UUIDMixin
 
@@ -32,7 +28,10 @@ class ProductVariant(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "product_variants"
 
     product_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("products.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("products.id"),
+        nullable=False,
+        index=True,
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     sku: Mapped[str] = mapped_column(

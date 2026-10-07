@@ -1,5 +1,4 @@
-from typing import Callable
-
+from collections.abc import Callable
 from enum import StrEnum
 
 from fastapi import HTTPException, status
@@ -84,6 +83,7 @@ def require_permission(permission: Permission) -> Callable[[User], User]:
                 detail=f"Permission '{permission.value}' required",
             )
         return current_user
+
     return dependency
 
 
@@ -95,6 +95,7 @@ def require_role(allowed_roles: list[str]) -> Callable[[User], User]:
                 detail="Insufficient role privileges",
             )
         return current_user
+
     return dependency
 
 
@@ -106,4 +107,5 @@ def require_any_role(allowed_roles: list[str]) -> Callable[[User], User]:
                 detail="Insufficient role privileges",
             )
         return current_user
+
     return dependency

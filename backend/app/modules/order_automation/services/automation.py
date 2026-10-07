@@ -26,7 +26,9 @@ class InventoryTransactionService:
         transaction = InventoryTransaction(**kwargs)
         return await self.repository.create(transaction)
 
-    async def list_by_product(self, product_id: uuid.UUID, skip: int = 0, limit: int = 20) -> tuple[list[InventoryTransaction], int]:
+    async def list_by_product(
+        self, product_id: uuid.UUID, skip: int = 0, limit: int = 20
+    ) -> tuple[list[InventoryTransaction], int]:
         return await self.repository.list_by_product(product_id, skip=skip, limit=limit)
 
 
@@ -38,7 +40,9 @@ class OrderEventService:
         event = OrderEvent(**kwargs)
         return await self.repository.create(event)
 
-    async def list_by_order(self, order_id: uuid.UUID, skip: int = 0, limit: int = 50) -> tuple[list[OrderEvent], int]:
+    async def list_by_order(
+        self, order_id: uuid.UUID, skip: int = 0, limit: int = 50
+    ) -> tuple[list[OrderEvent], int]:
         return await self.repository.list_by_order(order_id, skip=skip, limit=limit)
 
 
@@ -62,7 +66,9 @@ class AutomationJobService:
             await self.repository.session.refresh(job)
         return job
 
-    async def mark_completed(self, job_id: uuid.UUID, error_message: str | None = None) -> AutomationJob:
+    async def mark_completed(
+        self, job_id: uuid.UUID, error_message: str | None = None
+    ) -> AutomationJob:
         job = await self.repository.get_by_id(job_id)
         if job:
             job.status = "completed" if not error_message else "failed"
@@ -82,7 +88,9 @@ class InventoryAlertService:
         alert = InventoryAlert(**kwargs)
         return await self.repository.create(alert)
 
-    async def list_unresolved(self, skip: int = 0, limit: int = 50) -> tuple[list[InventoryAlert], int]:
+    async def list_unresolved(
+        self, skip: int = 0, limit: int = 50
+    ) -> tuple[list[InventoryAlert], int]:
         return await self.repository.list_unresolved(skip=skip, limit=limit)
 
     async def resolve(self, alert_id: uuid.UUID) -> InventoryAlert:

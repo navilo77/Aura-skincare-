@@ -9,14 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface Product {
-  id: string;
-  name: string;
-  sku: string;
-  price: number;
-  status: string;
-  is_active: boolean;
-}
+import { Product } from "@/lib/services/product.service";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);

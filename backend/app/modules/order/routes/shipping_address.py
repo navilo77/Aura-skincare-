@@ -4,6 +4,8 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.dependencies.auth import get_current_user
+from app.modules.auth.models.user import User
 from app.modules.order.schemas.shipping_address import (
     ShippingAddressCreateRequest,
     ShippingAddressRead,
@@ -11,13 +13,16 @@ from app.modules.order.schemas.shipping_address import (
 )
 from app.modules.order.services.shipping_address import ShippingAddressService
 from app.shared.database.session import get_db
-from app.modules.order.models.shipping_address import ShippingAddress
 
 router = APIRouter(prefix="/shipping-address", tags=["shipping-addresses"])
 
 
 @router.get("", response_model=ShippingAddressRead)
-async def get_shipping_address(order_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+async def get_shipping_address(
+    order_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Any:
     service = ShippingAddressService(db)
     address = await service.get_shipping_address(order_id)
     if not address:
@@ -34,6 +39,7 @@ async def get_shipping_address(order_id: uuid.UUID, db: AsyncSession = Depends(g
 async def create_shipping_address(
     order_id: uuid.UUID,
     payload: ShippingAddressCreateRequest,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = ShippingAddressService(db)
@@ -60,6 +66,7 @@ async def create_shipping_address(
 async def update_shipping_address(
     order_id: uuid.UUID,
     payload: ShippingAddressUpdate,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = ShippingAddressService(db)
@@ -90,7 +97,9 @@ async def update_shipping_address(
 
 @router.delete("", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 async def delete_shipping_address(
-    order_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+    order_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = ShippingAddressService(db)
     existing = await service.get_shipping_address(order_id)

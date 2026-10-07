@@ -11,7 +11,6 @@ from app.modules.product.schemas.product_image import (
 )
 from app.modules.product.services.product_image import ProductImageService
 from app.shared.database.session import get_db
-from app.modules.product.models.product_image import ProductImage
 
 router = APIRouter(prefix="/images", tags=["product-images"])
 
@@ -96,7 +95,9 @@ async def update_image(
         ) from exc
 
 
-@router.delete("/{image_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
+@router.delete(
+    "/{image_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
 async def delete_image(image_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
     service = ProductImageService(db)
     try:

@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import uuid
+from typing import TYPE_CHECKING
 
 from sqlalchemy import UUID, Boolean, ForeignKey, Integer, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.shared.database.base import Base, TimestampMixin, UUIDMixin
+
+if TYPE_CHECKING:
+    from app.modules.product.models import Product
 
 
 class Cart(Base, UUIDMixin, TimestampMixin):
@@ -47,3 +51,4 @@ class CartItem(Base, UUIDMixin, TimestampMixin):
     subtotal: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
 
     cart: Mapped["Cart"] = relationship("Cart", back_populates="items")
+    product: Mapped["Product"] = relationship("Product")

@@ -14,7 +14,6 @@ class ProductImageBase(BaseModel):
     is_primary: bool = False
 
 
-
 class ProductImageCreateRequest(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

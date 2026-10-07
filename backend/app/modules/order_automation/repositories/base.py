@@ -20,9 +20,7 @@ class BaseRepository:
         field = getattr(self.model, field_name, None)
         if field is None:
             return None
-        result = await self.session.execute(
-            select(self.model).where(field == value)
-        )
+        result = await self.session.execute(select(self.model).where(field == value))
         return result.scalar_one_or_none()
 
     async def get_list(
@@ -61,6 +59,7 @@ class BaseRepository:
 
     async def delete(self, entity_id: uuid.UUID) -> bool:
         from sqlalchemy import delete
+
         result = await self.session.execute(
             delete(self.model).where(self.model.id == entity_id)
         )

@@ -1,11 +1,10 @@
 import uuid
+from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.analytics.models import AnalyticsEvent
 from app.modules.analytics.repositories.event import AnalyticsEventRepository
-from typing import Any
-
 
 
 class EventService:
@@ -29,8 +28,12 @@ class EventService:
         )
         return await self.repository.create(event)
 
-    async def get_by_category(self, category: str, skip: int = 0, limit: int = 20) -> Any:
+    async def get_by_category(
+        self, category: str, skip: int = 0, limit: int = 20
+    ) -> Any:
         return await self.repository.get_by_category(category, skip=skip, limit=limit)
 
-    async def get_by_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 20) -> Any:
+    async def get_by_user(
+        self, user_id: uuid.UUID, skip: int = 0, limit: int = 20
+    ) -> Any:
         return await self.repository.get_by_user(user_id, skip=skip, limit=limit)

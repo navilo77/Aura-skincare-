@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from sqlalchemy import Select, delete, func, or_, select
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -32,7 +32,12 @@ class BaseRepository:
         )
         return result.rowcount > 0  # type: ignore[attr-defined, no-any-return]
 
-    async def _build_query(self, *filters: Any, search: str | None = None, search_fields: list[str] | None = None) -> Any:
+    async def _build_query(
+        self,
+        *filters: Any,
+        search: str | None = None,
+        search_fields: list[str] | None = None,
+    ) -> Any:
         query = select(self.model).where(*filters)
         if search and search_fields:
             conditions = []
@@ -44,7 +49,9 @@ class BaseRepository:
                 query = query.where(or_(*conditions))
         return query
 
-    async def _apply_pagination(self, query: Any, skip: int = 0, limit: int = 20) -> tuple[Any, int]:
+    async def _apply_pagination(
+        self, query: Any, skip: int = 0, limit: int = 20
+    ) -> tuple[Any, int]:
         count_query = select(func.count()).select_from(query.subquery())
         total_result = await self.session.execute(count_query)
         total = total_result.scalar_one()

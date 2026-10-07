@@ -1,11 +1,10 @@
 from datetime import UTC, datetime
+from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.analytics.models import Metric
 from app.modules.analytics.repositories.metric import MetricRepository
-from typing import Any
-
 
 
 class MetricService:

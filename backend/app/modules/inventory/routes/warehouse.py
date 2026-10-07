@@ -11,7 +11,6 @@ from app.modules.inventory.schemas.warehouse import (
 )
 from app.modules.inventory.services.warehouse import WarehouseService
 from app.shared.database.session import get_db
-from app.modules.inventory.models.warehouse import Warehouse
 
 router = APIRouter(tags=["warehouses"])
 
@@ -48,7 +47,9 @@ async def create_warehouse(
 
 
 @router.get("/{warehouse_id}", response_model=WarehouseRead)
-async def get_warehouse(warehouse_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+async def get_warehouse(
+    warehouse_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = WarehouseService(db)
     warehouse = await service.get_by_id(warehouse_id)
     if not warehouse:
@@ -80,8 +81,12 @@ async def update_warehouse(
         ) from exc
 
 
-@router.delete("/{warehouse_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
-async def delete_warehouse(warehouse_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+@router.delete(
+    "/{warehouse_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
+async def delete_warehouse(
+    warehouse_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = WarehouseService(db)
     try:
         await service.delete(warehouse_id)

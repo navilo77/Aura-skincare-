@@ -1,6 +1,5 @@
 from typing import Any
 
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,7 +11,9 @@ class MetricRepository(BaseRepository):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Metric)
 
-    async def get_by_name(self, name: str, skip: int = 0, limit: int = 20) -> tuple[list[Any], int]:
+    async def get_by_name(
+        self, name: str, skip: int = 0, limit: int = 20
+    ) -> tuple[list[Any], int]:
         query = (
             select(Metric)
             .where(Metric.metric_name == name)

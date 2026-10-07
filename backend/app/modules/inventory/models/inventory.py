@@ -1,29 +1,38 @@
 from __future__ import annotations
 
 import uuid
-
-from sqlalchemy import Boolean, ForeignKey, Integer, UUID
 from typing import TYPE_CHECKING
 
+from sqlalchemy import UUID, Boolean, ForeignKey, Integer
+
 if TYPE_CHECKING:
-    from app.modules.inventory.models import InventoryAdjustment, InventoryMovement, InventoryReservation
-    from app.modules.product.models import Product
-    from app.modules.inventory.models import Warehouse
+    from app.modules.inventory.models import (
+        InventoryAdjustment,
+        InventoryMovement,
+        InventoryReservation,
+        Warehouse,
+    )
+from typing import TYPE_CHECKING
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+if TYPE_CHECKING:
+    from app.modules.inventory.models import (
+        InventoryAdjustment,
+        InventoryMovement,
+        InventoryReservation,
+        Warehouse,
+    )
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.modules.inventory.models import InventoryAdjustment, InventoryMovement, InventoryReservation
-    from app.modules.product.models import Product
-    from app.modules.inventory.models import Warehouse
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from app.modules.inventory.models import InventoryAdjustment, InventoryMovement, InventoryReservation
-    from app.modules.product.models import Product
-    from app.modules.inventory.models import Warehouse
+    from app.modules.inventory.models import (
+        InventoryAdjustment,
+        InventoryMovement,
+        InventoryReservation,
+        Warehouse,
+    )
 
 from app.shared.database.base import Base, TimestampMixin, UUIDMixin
 

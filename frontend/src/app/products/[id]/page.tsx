@@ -18,26 +18,12 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
-interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  currency?: string;
-  thumbnail_url?: string;
-  images?: string[];
-  stock_quantity: number;
-  sku?: string;
-  status?: string;
-  category?: string;
-  old_price?: number;
-  rating?: number;
-  review_count?: number;
-  ingredients?: string;
-  benefits?: string[];
-  directions?: string;
-  reviews?: Array<{ id: string; author: string; rating: number; text: string; date: string }>;
-}
+import { Product } from "@/lib/services/product.service";
+
+import { useProduct, useProducts } from '@/lib/hooks/useProducts';
+import { useCartStore } from '@/lib/store/useCartStore';
+import { cartService } from '@/lib/services/cart.service';
+import { useWishlistStore } from '@/lib/store/useWishlistStore';
 
 const CONTAINER_VARIANTS = {
   hidden: { opacity: 0 },
@@ -71,10 +57,6 @@ const TAB_CONTENT_VARIANTS = {
 };
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const [product, setProduct] = useState<Product | null>(null);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [selectedImage, setSelectedImage] = useState(0);
@@ -85,49 +67,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [addedToCart, setAddedToCart] = useState(false);
 
   const productId = params.id;
+  const { data: product, isLoading: loading, error, refetch } = useProduct(productId);
+  const { data: allProducts } = useProducts({ limit: 5 });
+  
+  const cartStore = useCartStore();
+  const wishlistStore = useWishlistStore();
 
-  const fetchProduct = async () => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    setSelectedImage(0);
-    setQuantity(1);
-    setActiveTab('description');
-    setAddedToCart(false);
-
-    fetch(`/api/products/${productId}`, { signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-      .then((data) => {
-        setProduct(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to load product');
-        setLoading(false);
-      });
-
-    return () => controller.abort();
-  };
-
-  useEffect(() => {
-    fetchProduct();
-  }, [productId]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch('/api/products', { signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data: Product[]) => {
-        const list = Array.isArray(data) ? data : [];
-        const filtered = list
-          .filter((p) => p.id !== productId)
-          .slice(0, 4);
-        setRelatedProducts(filtered);
-      })
-      .catch(() => {});
-
-    return () => controller.abort();
-  }, [productId]);
+  const relatedProducts = (allProducts || []).filter((p) => p.id !== productId).slice(0, 4);
 
   useEffect(() => {
     const onScroll = () => {
@@ -151,11 +97,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     if (!product) return;
     setIsAddingToCart(true);
     try {
-      await fetch('/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: product.id, quantity }),
+      const addedItem = await cartService.addItem(product.id, quantity);
+      cartStore.addItem({
+        ...addedItem,
+        product_name: product.name,
+        thumbnail_url: product.thumbnail_url,
       });
+      cartStore.setDrawerOpen(true);
       setAddedToCart(true);
       setTimeout(() => setAddedToCart(false), 2000);
     } catch {
@@ -169,10 +117,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     if (!product) return;
     setIsAddingToWishlist(true);
     try {
-      await fetch(`/api/wishlist/items/${product.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: product.id }),
+      // Assuming a wishlistService would be here, but we will use the local store for now
+      wishlistStore.addItem({
+        id: product.id,
+        product_id: product.id,
       });
     } catch {
       // silent fail
@@ -246,9 +194,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background">
         <p className="text-xl text-secondary-text">Failed to load product</p>
-        <p className="text-secondary-text">{error}</p>
+        <p className="text-secondary-text">{error.message || 'An error occurred'}</p>
         <button
-          onClick={fetchProduct}
+          onClick={() => refetch()}
           className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-medium rounded-button hover:bg-accent-dark transition-all duration-200 shadow-soft"
         >
           <ShoppingCart size={18} />

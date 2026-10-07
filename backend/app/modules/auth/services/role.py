@@ -32,8 +32,8 @@ class RoleService:
         if permission_ids:
             for permission_id in permission_ids:
                 await self.role_permission_repository.create_link(
-                role.id, permission_id
-            )
+                    role.id, permission_id
+                )
 
         return role
 
@@ -65,8 +65,8 @@ class RoleService:
 
             for permission_id in permission_ids:
                 await self.role_permission_repository.create_link(
-                role_id, permission_id
-            )
+                    role_id, permission_id
+                )
 
         return role
 
@@ -97,7 +97,5 @@ class PermissionService:
     async def get_by_id(self, permission_id: uuid.UUID) -> Any:
         return await self.repository.get_by_id(permission_id)
 
-    async def get_list(
-        self, skip: int = 0, limit: int = 20
-    ) -> Any:
+    async def get_list(self, skip: int = 0, limit: int = 20) -> Any:
         return await self.repository.get_list(skip=skip, limit=limit)

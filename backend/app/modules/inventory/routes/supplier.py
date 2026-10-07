@@ -11,7 +11,6 @@ from app.modules.inventory.schemas.supplier import (
 )
 from app.modules.inventory.services.supplier import SupplierService
 from app.shared.database.session import get_db
-from app.modules.inventory.models.supplier import Supplier
 
 router = APIRouter(tags=["suppliers"])
 
@@ -29,7 +28,9 @@ async def list_suppliers(
 
 
 @router.post("", response_model=SupplierRead, status_code=status.HTTP_201_CREATED)
-async def create_supplier(payload: SupplierCreate, db: AsyncSession = Depends(get_db)) -> Any:
+async def create_supplier(
+    payload: SupplierCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = SupplierService(db)
     try:
         supplier = await service.create(
@@ -47,7 +48,9 @@ async def create_supplier(payload: SupplierCreate, db: AsyncSession = Depends(ge
 
 
 @router.get("/{supplier_id}", response_model=SupplierRead)
-async def get_supplier(supplier_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+async def get_supplier(
+    supplier_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = SupplierService(db)
     supplier = await service.get_by_id(supplier_id)
     if not supplier:
@@ -78,8 +81,12 @@ async def update_supplier(
         ) from exc
 
 
-@router.delete("/{supplier_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
-async def delete_supplier(supplier_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+@router.delete(
+    "/{supplier_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
+async def delete_supplier(
+    supplier_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = SupplierService(db)
     try:
         await service.delete(supplier_id)

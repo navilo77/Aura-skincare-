@@ -9,4 +9,6 @@ class OrderValidator:
             "cancelled": [],
         }
         if new_status not in allowed.get(current_status, []):
-            raise ValueError(f"Invalid status transition from {current_status} to {new_status}")
+            raise ValueError(
+                f"Invalid status transition from {current_status} to {new_status}"
+            )

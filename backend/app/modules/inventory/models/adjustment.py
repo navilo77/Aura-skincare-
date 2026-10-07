@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import uuid
-
-from sqlalchemy import Boolean, Enum, ForeignKey, Integer, Text, UUID
 from typing import TYPE_CHECKING
+
+from sqlalchemy import UUID, Boolean, Enum, ForeignKey, Integer, Text
 
 if TYPE_CHECKING:
     from app.modules.inventory.models import Inventory
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.inventory.models import Inventory
@@ -21,7 +21,10 @@ class InventoryAdjustment(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "inventory_adjustments"
 
     inventory_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("inventories.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("inventories.id"),
+        nullable=False,
+        index=True,
     )
     adjustment_type: Mapped[str] = mapped_column(
         Enum(

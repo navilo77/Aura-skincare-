@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import uuid
-
 from decimal import Decimal
 
-from sqlalchemy import Boolean, Enum, ForeignKey, Numeric, String, Text, UUID
+from sqlalchemy import UUID, Boolean, Enum, ForeignKey, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.shared.database.base import Base, TimestampMixin, UUIDMixin

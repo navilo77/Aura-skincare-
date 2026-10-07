@@ -1,7 +1,6 @@
 import uuid
 from typing import Any
 
-from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,7 +11,6 @@ from app.modules.product.schemas.product_variant import (
 )
 from app.modules.product.services.product_variant import ProductVariantService
 from app.shared.database.session import get_db
-from app.modules.product.models.product_variant import ProductVariant
 
 router = APIRouter(prefix="/variants", tags=["product-variants"])
 
@@ -103,8 +101,12 @@ async def update_variant(
         ) from exc
 
 
-@router.delete("/{variant_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
-async def delete_variant(variant_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
+@router.delete(
+    "/{variant_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
+async def delete_variant(
+    variant_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = ProductVariantService(db)
     try:
         await service.delete(variant_id)

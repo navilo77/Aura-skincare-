@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import uuid
-
-from sqlalchemy import ForeignKey, String, UUID
 from typing import TYPE_CHECKING
+
+from sqlalchemy import UUID, ForeignKey, String
 
 if TYPE_CHECKING:
     from app.modules.order.models import Order
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.order.models import Order

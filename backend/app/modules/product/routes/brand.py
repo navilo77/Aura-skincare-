@@ -12,7 +12,6 @@ from app.modules.product.schemas.brand import (
 )
 from app.modules.product.services.brand import BrandService
 from app.shared.database.session import get_db
-from app.modules.product.models.brand import Brand
 
 router = APIRouter(prefix="/brands", tags=["brands"])
 
@@ -86,7 +85,9 @@ async def update_brand(
         ) from exc
 
 
-@router.delete("/{brand_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
+@router.delete(
+    "/{brand_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
 async def delete_brand(brand_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Any:
     service = BrandService(db)
     try:

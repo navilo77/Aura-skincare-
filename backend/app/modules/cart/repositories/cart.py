@@ -3,6 +3,7 @@ from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.modules.cart.models import Cart, CartItem
 from app.modules.product.repositories.base import BaseRepository
@@ -40,16 +41,24 @@ class CartItemRepository(BaseRepository):
         product_id: uuid.UUID,
         product_variant_id: uuid.UUID | None,
     ) -> CartItem | None:
-        stmt = select(CartItem).where(
-            CartItem.cart_id == cart_id,
-            CartItem.product_id == product_id,
-            CartItem.product_variant_id == product_variant_id,
+        stmt = (
+            select(CartItem)
+            .options(selectinload(CartItem.product))
+            .where(
+                CartItem.cart_id == cart_id,
+                CartItem.product_id == product_id,
+                CartItem.product_variant_id == product_variant_id,
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
     async def list_by_cart(self, cart_id: uuid.UUID) -> list[CartItem]:
-        stmt = select(CartItem).where(CartItem.cart_id == cart_id)
+        stmt = (
+            select(CartItem)
+            .options(selectinload(CartItem.product))
+            .where(CartItem.cart_id == cart_id)
+        )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 

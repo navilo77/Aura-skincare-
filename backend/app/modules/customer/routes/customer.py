@@ -4,14 +4,14 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.dependencies.rbac import Permission, require_any_permission
+from app.modules.auth.models.user import User
 from app.modules.customer.schemas.customer import (
     CustomerCreate,
-    CustomerDetail,
     CustomerList,
     CustomerRead,
     CustomerUpdate,
 )
-from app.modules.customer.models.customer import Customer
 from app.modules.customer.services.customer import CustomerService
 from app.shared.database.session import get_db
 
@@ -22,20 +22,23 @@ router = APIRouter(tags=["customers"])
 async def list_customers(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
-    status: str | None = Query(None),
+    customer_status: str | None = Query(None, alias="status"),
     search: str | None = Query(None),
+    current_user: User = Depends(require_any_permission(Permission.CUSTOMER_READ)),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = CustomerService(db)
     customers, _ = await service.get_list(
-        skip=skip, limit=limit, status=status, search=search
+        skip=skip, limit=limit, status=customer_status, search=search
     )
     return customers
 
 
 @router.get("/{customer_id}", response_model=CustomerRead)
 async def get_customer(
-    customer_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+    customer_id: uuid.UUID,
+    current_user: User = Depends(require_any_permission(Permission.CUSTOMER_READ)),
+    db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = CustomerService(db)
     customer = await service.get_by_id(customer_id)
@@ -46,11 +49,11 @@ async def get_customer(
     return customer
 
 
-@router.post(
-    "", response_model=CustomerRead, status_code=status.HTTP_201_CREATED
-)
+@router.post("", response_model=CustomerRead, status_code=status.HTTP_201_CREATED)
 async def create_customer(
-    payload: CustomerCreate, db: AsyncSession = Depends(get_db)
+    payload: CustomerCreate,
+    current_user: User = Depends(require_any_permission(Permission.CUSTOMER_WRITE)),
+    db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = CustomerService(db)
     try:
@@ -73,6 +76,7 @@ async def create_customer(
 async def update_customer(
     customer_id: uuid.UUID,
     payload: CustomerUpdate,
+    current_user: User = Depends(require_any_permission(Permission.CUSTOMER_WRITE)),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = CustomerService(db)
@@ -93,9 +97,13 @@ async def update_customer(
         ) from exc
 
 
-@router.delete("/{customer_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
+@router.delete(
+    "/{customer_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None
+)
 async def delete_customer(
-    customer_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+    customer_id: uuid.UUID,
+    current_user: User = Depends(require_any_permission(Permission.CUSTOMER_DELETE)),
+    db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = CustomerService(db)
     try:

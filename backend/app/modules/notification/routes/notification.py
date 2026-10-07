@@ -4,7 +4,6 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.modules.notification.models import Notification, NotificationTemplate
 from app.modules.notification.schemas.notification import (
     NotificationCreate,
     NotificationRead,
@@ -16,7 +15,6 @@ from app.modules.notification.schemas.notification import (
 from app.modules.notification.services.notification import NotificationService
 from app.modules.notification.services.template import TemplateService
 from app.shared.database.session import get_db
-from app.modules.notification.models import Notification, NotificationTemplate
 
 router = APIRouter(tags=["notifications"])
 
@@ -36,7 +34,9 @@ async def list_templates(
 @router.post(
     "/templates", response_model=TemplateRead, status_code=status.HTTP_201_CREATED
 )
-async def create_template(payload: TemplateCreate, db: AsyncSession = Depends(get_db)) -> Any:
+async def create_template(
+    payload: TemplateCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = TemplateService(db)
     try:
         template = await service.create(
@@ -53,9 +53,7 @@ async def create_template(payload: TemplateCreate, db: AsyncSession = Depends(ge
         ) from exc
 
 
-@router.patch(
-    "/templates/{template_id}", response_model=TemplateRead
-)
+@router.patch("/templates/{template_id}", response_model=TemplateRead)
 async def update_template(
     template_id: uuid.UUID,
     payload: TemplateUpdate,
@@ -93,9 +91,7 @@ async def create_notification(
     return notification
 
 
-@router.patch(
-    "/{notification_id}", response_model=NotificationRead
-)
+@router.patch("/{notification_id}", response_model=NotificationRead)
 async def update_notification(
     notification_id: uuid.UUID,
     payload: NotificationUpdate,
@@ -125,12 +121,10 @@ async def list_notifications(
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = NotificationService(db)
-    if user_id:
-        notifications, _ = await service.get_by_user(
-            user_id, skip=skip, limit=limit
-        )
-    elif status:
-        notifications, _ = await service.get_by_status(status, skip=skip, limit=limit)
-    else:
-        notifications = []
+    notifications, _ = await service.notification_repo.get_list(
+        user_id=user_id,
+        status=status,
+        skip=skip,
+        limit=limit,
+    )
     return notifications

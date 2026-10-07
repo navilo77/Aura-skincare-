@@ -49,3 +49,31 @@ async def get_current_user(
         )
 
     return user
+
+
+async def get_optional_user(
+    authorization: str | None = Header(None, alias="Authorization"),
+    db: AsyncSession = Depends(get_db),
+) -> User | None:
+    if authorization is None or not authorization.startswith("Bearer "):
+        return None
+    token = authorization.split(" ")[1]
+
+    try:
+        payload = jwt.decode(
+            token,
+            settings.jwt_secret_key,
+            algorithms=[settings.jwt_algorithm],
+        )
+    except JWTError:
+        return None
+
+    user_id = payload.get("sub")
+    if user_id is None:
+        return None
+
+    try:
+        repository = UserRepository(db)
+        return await repository.get_by_id(uuid.UUID(user_id))
+    except Exception:
+        return None

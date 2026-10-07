@@ -11,7 +11,6 @@ from app.modules.inventory.schemas.reservation import (
 )
 from app.modules.inventory.services.reservation import ReservationService
 from app.shared.database.session import get_db
-from app.modules.inventory.models.reservation import InventoryReservation
 
 router = APIRouter(tags=["inventory-reservations"])
 

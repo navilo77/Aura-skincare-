@@ -1,17 +1,14 @@
 from __future__ import annotations
 
-import uuid
-
-from typing import Any
+from typing import TYPE_CHECKING
 
 from sqlalchemy import JSON, Enum, String
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.modules.customer.models import Address, Conversation
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.customer.models import Address, Conversation

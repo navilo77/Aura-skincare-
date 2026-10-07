@@ -42,9 +42,9 @@ async def test_user_repository_duplicate_email(db_session: AsyncSession):
     await db_session.flush()
 
     assert await repo.exists_by_email("dup@example.com") is True
-    assert await repo.exists_by_email_excluding_id(
-        "dup@example.com", uuid.uuid4()
-    ) is True
+    assert (
+        await repo.exists_by_email_excluding_id("dup@example.com", uuid.uuid4()) is True
+    )
     assert await repo.exists_by_email_excluding_id("dup@example.com", user.id) is False
 
 

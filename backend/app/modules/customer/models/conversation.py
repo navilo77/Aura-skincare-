@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum, ForeignKey
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.modules.customer.models import Customer
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.customer.models import Customer

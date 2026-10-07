@@ -53,4 +53,3 @@ class CategoryTree(CategoryRead):
 
 
 CategoryTree.model_rebuild()
-

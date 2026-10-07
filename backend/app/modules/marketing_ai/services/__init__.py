@@ -1,3 +1,7 @@
+from app.modules.marketing_ai.services.generation import (
+    MarketingAssetService as GeneratedAssetService,
+)
+from app.modules.marketing_ai.services.generation import MarketingGenerationService
 from app.modules.marketing_ai.services.marketing import (
     MarketingAILogService,
     MarketingAssetService,
@@ -14,4 +18,6 @@ __all__ = [
     "MarketingContentService",
     "MarketingHistoryService",
     "MarketingTemplateService",
+    "MarketingGenerationService",
+    "GeneratedAssetService",
 ]

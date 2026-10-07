@@ -11,7 +11,6 @@ from app.modules.inventory.schemas.adjustment import (
 )
 from app.modules.inventory.services.adjustment import AdjustmentService
 from app.shared.database.session import get_db
-from app.modules.inventory.models.adjustment import InventoryAdjustment
 
 router = APIRouter(tags=["inventory-adjustments"])
 

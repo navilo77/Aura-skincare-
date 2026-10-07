@@ -1,4 +1,3 @@
-
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -51,12 +50,13 @@ async def test_customer_repository_exists_checks(db_session: AsyncSession):
     assert await repo.exists_by_email("missing@example.com") is False
     assert await repo.exists_by_phone("+8801111111111") is True
     assert await repo.exists_by_phone("+8800000000000") is False
-    assert await repo.exists_by_email_excluding_id(
-        "exists@example.com", customer.id
-    ) is False
-    assert await repo.exists_by_phone_excluding_id(
-        "+8801111111111", customer.id
-    ) is False
+    assert (
+        await repo.exists_by_email_excluding_id("exists@example.com", customer.id)
+        is False
+    )
+    assert (
+        await repo.exists_by_phone_excluding_id("+8801111111111", customer.id) is False
+    )
 
 
 @pytest.mark.asyncio

@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.inventory.schemas.movement import MovementCreate, MovementRead
 from app.modules.inventory.services.movement import MovementService
 from app.shared.database.session import get_db
-from app.modules.inventory.models.movement import InventoryMovement
 
 router = APIRouter(tags=["inventory-movements"])
 
@@ -30,7 +29,9 @@ async def list_movements(
 
 
 @router.post("", response_model=MovementRead, status_code=status.HTTP_201_CREATED)
-async def create_movement(payload: MovementCreate, db: AsyncSession = Depends(get_db)) -> Any:
+async def create_movement(
+    payload: MovementCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = MovementService(db)
     try:
         movement = await service.create(

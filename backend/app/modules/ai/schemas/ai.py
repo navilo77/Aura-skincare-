@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 
 class ConversationRead(BaseModel):
@@ -46,9 +46,19 @@ class MessageCreate(BaseModel):
 
 
 class ChatRequest(BaseModel):
-    message: str
-    session_id: str
+    message: str = Field(min_length=1, max_length=2000)
+    session_id: str = Field(min_length=1)
     user_id: uuid.UUID | None = None
+
+    @field_validator("message")
+    @classmethod
+    def clean_message(cls, value: str) -> str:
+        return value.strip()
+
+    @field_validator("session_id")
+    @classmethod
+    def clean_session_id(cls, value: str) -> str:
+        return value.strip()
 
 
 class ChatResponse(BaseModel):

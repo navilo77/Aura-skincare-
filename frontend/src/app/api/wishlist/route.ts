@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
 
 async function getAuthHeaders(request: Request) {
   const authHeader = request.headers.get('authorization');
@@ -24,10 +24,17 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const res = await fetch(`${BACKEND_URL}/api/v1/wishlist/items/${body.product_id}`, {
+  const productId = body.product_id;
+  const productVariantId = body.product_variant_id;
+  
+  let url = `${BACKEND_URL}/api/v1/wishlist/items/${productId}`;
+  if (productVariantId) {
+    url += `?product_variant_id=${productVariantId}`;
+  }
+  
+  const res = await fetch(url, {
     method: 'POST',
     headers: await getAuthHeaders(request),
-    body: JSON.stringify(body),
   });
   const data = await res.json();
   return NextResponse.json(data, { status: res.status });

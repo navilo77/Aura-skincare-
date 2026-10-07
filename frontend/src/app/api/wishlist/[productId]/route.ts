@@ -11,7 +11,15 @@ async function getAuthHeaders(request: Request) {
 }
 
 export async function DELETE(request: Request, { params }: { params: { productId: string } }) {
-  const res = await fetch(`${BACKEND_URL}/api/v1/wishlist/items/${params.productId}`, {
+  const { searchParams } = new URL(request.url);
+  const productVariantId = searchParams.get('product_variant_id');
+  
+  let url = `${BACKEND_URL}/api/v1/wishlist/items/${params.productId}`;
+  if (productVariantId) {
+    url += `?product_variant_id=${productVariantId}`;
+  }
+  
+  const res = await fetch(url, {
     method: 'DELETE',
     headers: await getAuthHeaders(request),
   });

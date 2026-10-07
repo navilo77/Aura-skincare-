@@ -14,25 +14,25 @@ help:
 	@echo "  docker-down  Stop Docker Compose services"
 
 install:
-	uv sync
+	cd backend && uv sync
 
 dev:
-	uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	cd backend && uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 test:
-	uv run pytest tests/ -v
+	cd backend && uv run pytest tests/ -v
 
 lint:
-	uv run ruff check .
-	uv run mypy .
+	cd backend && uv run ruff check .
+	cd backend && uv run mypy .
 
 format:
-	uv run ruff format .
+	cd backend && uv run ruff format .
 
 clean:
-	find . -type d -name __pycache__ -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
-	rm -rf .mypy_cache .ruff_cache .pytest_cache .coverage htmlcov
+	cd backend && find . -type d -name __pycache__ -exec rm -rf {} +
+	cd backend && find . -type f -name "*.pyc" -delete
+	cd backend && rm -rf .mypy_cache .ruff_cache .pytest_cache .coverage htmlcov
 
 docker-up:
 	docker compose up --build

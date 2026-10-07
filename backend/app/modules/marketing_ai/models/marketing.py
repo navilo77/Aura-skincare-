@@ -30,8 +30,12 @@ class MarketingTemplate(Base, UUIDMixin, TimestampMixin):
 class MarketingContent(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "marketing_contents"
 
-    campaign_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), ForeignKey("marketing_campaigns.id"), nullable=True)
-    template_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), ForeignKey("marketing_templates.id"), nullable=True)
+    campaign_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("marketing_campaigns.id"), nullable=True
+    )
+    template_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("marketing_templates.id"), nullable=True
+    )
     content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     title: Mapped[str | None] = mapped_column(String(255), nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
@@ -41,7 +45,9 @@ class MarketingContent(Base, UUIDMixin, TimestampMixin):
 class MarketingHistory(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "marketing_history"
 
-    content_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True)
+    content_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid(as_uuid=True), nullable=True
+    )
     action: Mapped[str] = mapped_column(String(50), nullable=False)
     extra_metadata: Mapped[str | None] = mapped_column(Text, nullable=True)
 
@@ -49,7 +55,9 @@ class MarketingHistory(Base, UUIDMixin, TimestampMixin):
 class MarketingAsset(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "marketing_assets"
 
-    content_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True)
+    content_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid(as_uuid=True), nullable=True
+    )
     asset_type: Mapped[str] = mapped_column(String(50), nullable=False)
     url: Mapped[str] = mapped_column(String(512), nullable=False)
     extra_metadata: Mapped[str | None] = mapped_column(Text, nullable=True)

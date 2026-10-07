@@ -1,10 +1,12 @@
 import uuid
 from typing import Any
 
-from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.dependencies.auth import get_current_user
+from app.api.dependencies.rbac import Permission, require_any_permission
+from app.modules.auth.models.user import User
 from app.modules.order.schemas.order_item import (
     OrderItemCreateRequest,
     OrderItemList,
@@ -13,7 +15,6 @@ from app.modules.order.schemas.order_item import (
 )
 from app.modules.order.services.order_item import OrderItemService
 from app.shared.database.session import get_db
-from app.modules.order.models.order_item import OrderItem
 
 router = APIRouter(prefix="/items", tags=["order-items"])
 
@@ -23,6 +24,7 @@ async def list_order_items(
     order_id: uuid.UUID,
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = OrderItemService(db)
@@ -32,7 +34,10 @@ async def list_order_items(
 
 @router.get("/{item_id}", response_model=OrderItemRead)
 async def get_order_item(
-    order_id: uuid.UUID, item_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+    order_id: uuid.UUID,
+    item_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = OrderItemService(db)
     item = await service.get_by_id(item_id)
@@ -44,12 +49,11 @@ async def get_order_item(
     return item
 
 
-@router.post(
-    "", response_model=OrderItemRead, status_code=status.HTTP_201_CREATED
-)
+@router.post("", response_model=OrderItemRead, status_code=status.HTTP_201_CREATED)
 async def create_order_item(
     order_id: uuid.UUID,
     payload: OrderItemCreateRequest,
+    current_user: User = Depends(require_any_permission(Permission.ORDER_WRITE)),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = OrderItemService(db)
@@ -72,6 +76,7 @@ async def update_order_item(
     order_id: uuid.UUID,
     item_id: uuid.UUID,
     payload: OrderItemUpdate,
+    current_user: User = Depends(require_any_permission(Permission.ORDER_WRITE)),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = OrderItemService(db)
@@ -100,6 +105,7 @@ async def update_order_item(
 async def delete_order_item(
     order_id: uuid.UUID,
     item_id: uuid.UUID,
+    current_user: User = Depends(require_any_permission(Permission.ORDER_DELETE)),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     service = OrderItemService(db)

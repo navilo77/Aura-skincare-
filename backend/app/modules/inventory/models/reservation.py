@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from datetime import datetime
 import uuid
-
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, UUID
+from datetime import datetime
 from typing import TYPE_CHECKING
+
+from sqlalchemy import UUID, DateTime, Enum, ForeignKey, Integer
 
 if TYPE_CHECKING:
     from app.modules.inventory.models import Inventory
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.modules.inventory.models import Inventory
@@ -22,7 +22,10 @@ class InventoryReservation(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "inventory_reservations"
 
     inventory_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("inventories.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("inventories.id"),
+        nullable=False,
+        index=True,
     )
     order_item_id: Mapped[uuid.UUID] = mapped_column(
         UUID[uuid.UUID](as_uuid=True),

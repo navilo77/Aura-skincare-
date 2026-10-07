@@ -7,14 +7,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.analytics.schemas.analytics import EventCreate, EventRead
 from app.modules.analytics.services.event import EventService
 from app.shared.database.session import get_db
-from app.modules.analytics.models.analytics import AnalyticsEvent
 
 router = APIRouter(tags=["analytics-events"])
 
 
-@router.post(
-    "/events", response_model=EventRead, status_code=status.HTTP_201_CREATED
-)
+@router.post("/events", response_model=EventRead, status_code=status.HTTP_201_CREATED)
 async def create_event(payload: EventCreate, db: AsyncSession = Depends(get_db)) -> Any:
     service = EventService(db)
     event = await service.create(

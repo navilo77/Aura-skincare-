@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 import uuid
-
-from sqlalchemy import ForeignKey, String, UUID
-
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
 
+from sqlalchemy import UUID, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 if TYPE_CHECKING:
-    from app.modules.auth.models import Permission as PermissionType, Role as RoleType
+    pass
 
 from app.shared.database.base import Base, TimestampMixin, UUIDMixin
 
@@ -48,10 +46,16 @@ class RolePermission(Base, UUIDMixin, TimestampMixin):
     __tablename__ = "role_permissions"
 
     role_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("roles.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("roles.id"),
+        nullable=False,
+        index=True,
     )
     permission_id: Mapped[uuid.UUID] = mapped_column(
-        UUID[uuid.UUID](as_uuid=True), ForeignKey("permissions.id"), nullable=False, index=True
+        UUID[uuid.UUID](as_uuid=True),
+        ForeignKey("permissions.id"),
+        nullable=False,
+        index=True,
     )
 
     role: Mapped["Role"] = relationship("Role", back_populates="permissions")

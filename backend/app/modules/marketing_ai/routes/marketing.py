@@ -28,13 +28,22 @@ from app.shared.database.session import get_db
 router = APIRouter()
 
 
-@router.post("/campaigns", response_model=MarketingCampaignRead, status_code=status.HTTP_201_CREATED, tags=["marketing"])
-async def create_campaign(payload: MarketingCampaignCreate, db: AsyncSession = Depends(get_db)) -> Any:
+@router.post(
+    "/campaigns",
+    response_model=MarketingCampaignRead,
+    status_code=status.HTTP_201_CREATED,
+    tags=["marketing"],
+)
+async def create_campaign(
+    payload: MarketingCampaignCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = MarketingCampaignService(db)
     return await service.create(**payload.model_dump())
 
 
-@router.get("/campaigns", response_model=list[MarketingCampaignRead], tags=["marketing"])
+@router.get(
+    "/campaigns", response_model=list[MarketingCampaignRead], tags=["marketing"]
+)
 async def list_campaigns(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
@@ -45,13 +54,22 @@ async def list_campaigns(
     return campaigns
 
 
-@router.post("/templates", response_model=MarketingTemplateRead, status_code=status.HTTP_201_CREATED, tags=["marketing"])
-async def create_template(payload: MarketingTemplateCreate, db: AsyncSession = Depends(get_db)) -> Any:
+@router.post(
+    "/templates",
+    response_model=MarketingTemplateRead,
+    status_code=status.HTTP_201_CREATED,
+    tags=["marketing"],
+)
+async def create_template(
+    payload: MarketingTemplateCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = MarketingTemplateService(db)
     return await service.create(**payload.model_dump())
 
 
-@router.get("/templates", response_model=list[MarketingTemplateRead], tags=["marketing"])
+@router.get(
+    "/templates", response_model=list[MarketingTemplateRead], tags=["marketing"]
+)
 async def list_templates(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
@@ -62,8 +80,15 @@ async def list_templates(
     return templates
 
 
-@router.post("/contents", response_model=MarketingContentRead, status_code=status.HTTP_201_CREATED, tags=["marketing"])
-async def create_content(payload: MarketingContentCreate, db: AsyncSession = Depends(get_db)) -> Any:
+@router.post(
+    "/contents",
+    response_model=MarketingContentRead,
+    status_code=status.HTTP_201_CREATED,
+    tags=["marketing"],
+)
+async def create_content(
+    payload: MarketingContentCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = MarketingContentService(db)
     return await service.create(**payload.model_dump())
 
@@ -79,8 +104,15 @@ async def list_contents(
     return contents
 
 
-@router.post("/assets", response_model=MarketingAssetRead, status_code=status.HTTP_201_CREATED, tags=["marketing"])
-async def create_asset(payload: MarketingAssetCreate, db: AsyncSession = Depends(get_db)) -> Any:
+@router.post(
+    "/assets",
+    response_model=MarketingAssetRead,
+    status_code=status.HTTP_201_CREATED,
+    tags=["marketing"],
+)
+async def create_asset(
+    payload: MarketingAssetCreate, db: AsyncSession = Depends(get_db)
+) -> Any:
     service = MarketingAssetService(db)
     return await service.create(**payload.model_dump())
 

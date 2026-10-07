@@ -1,34 +1,84 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
 
 async function getAuthHeaders(request: Request) {
-  const authHeader = request.headers.get('authorization');
+  const authHeader = request.headers.get("authorization");
+
   return {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...(authHeader ? { Authorization: authHeader } : {}),
   };
 }
 
-export async function GET(request: Request) {
-  const res = await fetch(`${BACKEND_URL}/public/v1/cart`, {
-    headers: await getAuthHeaders(request),
-    cache: 'no-store',
-  });
-  const data = await res.json();
-  if (res.ok) {
-    return NextResponse.json(data);
+function normalizeCartItem(item: Record<string, unknown>): Record<string, unknown> {
+  const normalized = { ...item };
+  if (typeof normalized.unit_price === "string") {
+    normalized.unit_price = parseFloat(normalized.unit_price);
   }
-  return NextResponse.json(data, { status: res.status });
+  if (typeof normalized.subtotal === "string") {
+    normalized.subtotal = parseFloat(normalized.subtotal);
+  }
+  if (normalized.thumbnail_url === null) {
+    normalized.thumbnail_url = undefined;
+  }
+  return normalized;
+}
+
+function normalizeCart(cart: Record<string, unknown>): Record<string, unknown> {
+  const normalized = { ...cart };
+  if (normalized.items && Array.isArray(normalized.items)) {
+    normalized.items = normalized.items.map(normalizeCartItem);
+  }
+  return normalized;
+}
+
+export async function GET(request: Request) {
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/v1/cart`, {
+      headers: await getAuthHeaders(request),
+      cache: "no-store",
+    });
+
+    const data = await response.json();
+    const normalizedData = normalizeCart(data);
+
+    return NextResponse.json(normalizedData, {
+      status: response.status,
+    });
+  } catch (error) {
+    console.error("Cart API Error:", error);
+
+    return NextResponse.json(
+      { message: "Failed to fetch cart" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const res = await fetch(`${BACKEND_URL}/public/v1/cart/items`, {
-    method: 'POST',
-    headers: await getAuthHeaders(request),
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  return NextResponse.json(data, { status: res.status });
+  try {
+    const body = await request.json();
+
+    const response = await fetch(`${BACKEND_URL}/api/v1/cart/items`, {
+      method: "POST",
+      headers: await getAuthHeaders(request),
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    const normalizedData = normalizeCartItem(data);
+
+    return NextResponse.json(normalizedData, {
+      status: response.status,
+    });
+  } catch (error) {
+    console.error("Add Cart Item Error:", error);
+
+    return NextResponse.json(
+      { message: "Failed to add cart item" },
+      { status: 500 }
+    );
+  }
 }

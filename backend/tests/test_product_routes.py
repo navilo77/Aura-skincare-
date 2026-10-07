@@ -171,7 +171,8 @@ async def test_category_route_parent_validation(client: AsyncClient, db_session)
 
 @pytest.mark.asyncio
 async def test_category_route_cannot_delete_with_children(
-    client: AsyncClient, db_session,
+    client: AsyncClient,
+    db_session,
 ):
     parent = Category(name="Parent", slug="parent")
     db_session.add(parent)
@@ -244,24 +245,18 @@ async def test_product_route_duplicate_slug_and_sku(client: AsyncClient, db_sess
 
     await client.post(
         "/api/v1/products",
-        json=_product_payload(
-            brand.id, category.id, slug="product", sku="SKU-001"
-        ),
+        json=_product_payload(brand.id, category.id, slug="product", sku="SKU-001"),
     )
 
     response = await client.post(
         "/api/v1/products",
-        json=_product_payload(
-            brand.id, category.id, slug="product", sku="SKU-002"
-        ),
+        json=_product_payload(brand.id, category.id, slug="product", sku="SKU-002"),
     )
     assert response.status_code == status.HTTP_409_CONFLICT
 
     response = await client.post(
         "/api/v1/products",
-        json=_product_payload(
-            brand.id, category.id, slug="product-2", sku="SKU-001"
-        ),
+        json=_product_payload(brand.id, category.id, slug="product-2", sku="SKU-001"),
     )
     assert response.status_code == status.HTTP_409_CONFLICT
 
@@ -285,7 +280,7 @@ async def test_product_route_pagination_and_filtering(client: AsyncClient, db_se
             ),
         )
 
-    response = await client.get("/api/v1/products?skip=0&limit=2")
+    response = await client.get("/api/v1/products?page=1&limit=2")
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert len(data) == 2
@@ -295,7 +290,7 @@ async def test_product_route_pagination_and_filtering(client: AsyncClient, db_se
     data = response.json()
     assert len(data) == 1
 
-    response = await client.get(f"/api/v1/products?brand_id={brand.id}")
+    response = await client.get(f"/api/v1/products?brand_slug={brand.slug}")
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert len(data) == 5
@@ -418,3 +413,149 @@ async def test_product_route_not_found(client: AsyncClient, db_session):
 
     response = await client.delete(f"/api/v1/products/{uuid.uuid4()}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.asyncio
+async def test_product_route_valid_brand_slug_returns_products(
+    client: AsyncClient, db_session
+):
+    brand = Brand(name="Brand", slug="brand")
+    category = Category(name="Category", slug="category")
+    db_session.add_all([brand, category])
+    await db_session.flush()
+
+    response = await client.post(
+        "/api/v1/products",
+        json=_product_payload(brand.id, category.id, name="Product A"),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = await client.get(f"/api/v1/products?brand_slug={brand.slug}")
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.json()) == 1
+
+
+@pytest.mark.asyncio
+async def test_product_route_invalid_brand_slug_returns_empty(
+    client: AsyncClient, db_session
+):
+    brand = Brand(name="Brand", slug="brand")
+    category = Category(name="Category", slug="category")
+    db_session.add_all([brand, category])
+    await db_session.flush()
+
+    response = await client.post(
+        "/api/v1/products",
+        json=_product_payload(brand.id, category.id, name="Product A"),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = await client.get("/api/v1/products?brand_slug=invalid-brand")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == []
+
+
+@pytest.mark.asyncio
+async def test_product_route_valid_category_slug_returns_products(
+    client: AsyncClient, db_session
+):
+    brand = Brand(name="Brand", slug="brand")
+    category = Category(name="Category", slug="category")
+    db_session.add_all([brand, category])
+    await db_session.flush()
+
+    response = await client.post(
+        "/api/v1/products",
+        json=_product_payload(brand.id, category.id, name="Product A"),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = await client.get(f"/api/v1/products?category_slug={category.slug}")
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.json()) == 1
+
+
+@pytest.mark.asyncio
+async def test_product_route_invalid_category_slug_returns_empty(
+    client: AsyncClient, db_session
+):
+    brand = Brand(name="Brand", slug="brand")
+    category = Category(name="Category", slug="category")
+    db_session.add_all([brand, category])
+    await db_session.flush()
+
+    response = await client.post(
+        "/api/v1/products",
+        json=_product_payload(brand.id, category.id, name="Product A"),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = await client.get("/api/v1/products?category_slug=invalid-category")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == []
+
+
+@pytest.mark.asyncio
+async def test_product_route_existing_brand_invalid_category_returns_empty(
+    client: AsyncClient, db_session
+):
+    brand = Brand(name="Brand", slug="brand")
+    category = Category(name="Category", slug="category")
+    db_session.add_all([brand, category])
+    await db_session.flush()
+
+    response = await client.post(
+        "/api/v1/products",
+        json=_product_payload(brand.id, category.id, name="Product A"),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = await client.get(
+        f"/api/v1/products?brand_slug={brand.slug}&category_slug=invalid-category"
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == []
+
+
+@pytest.mark.asyncio
+async def test_product_route_invalid_brand_existing_category_returns_empty(
+    client: AsyncClient, db_session
+):
+    brand = Brand(name="Brand", slug="brand")
+    category = Category(name="Category", slug="category")
+    db_session.add_all([brand, category])
+    await db_session.flush()
+
+    response = await client.post(
+        "/api/v1/products",
+        json=_product_payload(brand.id, category.id, name="Product A"),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = await client.get(
+        f"/api/v1/products?brand_slug=invalid-brand&category_slug={category.slug}"
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == []
+
+
+@pytest.mark.asyncio
+async def test_product_route_invalid_brand_invalid_category_returns_empty(
+    client: AsyncClient, db_session
+):
+    brand = Brand(name="Brand", slug="brand")
+    category = Category(name="Category", slug="category")
+    db_session.add_all([brand, category])
+    await db_session.flush()
+
+    response = await client.post(
+        "/api/v1/products",
+        json=_product_payload(brand.id, category.id, name="Product A"),
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = await client.get(
+        "/api/v1/products?brand_slug=invalid-brand&category_slug=invalid-category"
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == []

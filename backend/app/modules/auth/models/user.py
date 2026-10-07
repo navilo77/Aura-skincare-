@@ -34,3 +34,6 @@ class User(Base, UUIDMixin, TimestampMixin):
         Integer, nullable=False, default=0
     )
     locked_until: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    stripe_customer_id: Mapped[str | None] = mapped_column(
+        String(255), nullable=True, unique=True, index=True
+    )
